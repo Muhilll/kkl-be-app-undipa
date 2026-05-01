@@ -1,0 +1,30 @@
+import { MenuController } from "../controller/menu.controller";
+import {
+  createModuleOpenApiDocument,
+  createOpenApiRouter,
+  registerOpenApiRoute,
+  registerDefaultSecuritySchemes,
+} from "../../../docs/openapi-common";
+import {
+  createMenuRoute,
+  deleteMenuRoute,
+  getAllMenusRoute,
+  getMenuByIdRoute,
+  updateMenuRoute,
+} from "./menu.openapi";
+
+const router = createOpenApiRouter();
+
+registerDefaultSecuritySchemes(router);
+
+registerOpenApiRoute(router, getAllMenusRoute, MenuController.getAll);
+registerOpenApiRoute(router, getMenuByIdRoute, MenuController.getById);
+registerOpenApiRoute(router, createMenuRoute, MenuController.create);
+registerOpenApiRoute(router, updateMenuRoute, MenuController.update);
+registerOpenApiRoute(router, deleteMenuRoute, MenuController.delete);
+
+export function getMenuOpenApiDocument(baseUrl: string) {
+  return createModuleOpenApiDocument(router, baseUrl, "Menu API");
+}
+
+export default router;
