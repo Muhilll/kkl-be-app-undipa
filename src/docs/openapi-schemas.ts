@@ -42,6 +42,172 @@ export const menuSchema = z
   })
   .openapi("Menu");
 
+export const jurusanSchema = z
+  .object({
+    id: z.number().int().openapi({
+      example: 1,
+    }),
+    kode: z.string().openapi({
+      example: "TI",
+    }),
+    nama: z.string().openapi({
+      example: "Teknik Informatika",
+    }),
+    created_at: timestampSchema,
+    updated_at: timestampSchema,
+  })
+  .openapi("Jurusan");
+
+export const mahasiswaSchema = z
+  .object({
+    id: z.number().int().openapi({
+      example: 1,
+    }),
+    nim: z.string().openapi({
+      example: "20260001",
+    }),
+    nama: z.string().openapi({
+      example: "Budi Santoso",
+    }),
+    email: z.string().email().openapi({
+      example: "budi@example.com",
+    }),
+    telp: z.string().nullable().openapi({
+      example: "081234567890",
+    }),
+    foto: z.string().nullable().openapi({
+      example: "https://res.cloudinary.com/demo/image/upload/foto.jpg",
+    }),
+    image_public_id: z.string().nullable().openapi({
+      example: "uploads/foto",
+    }),
+    jurusan_id: z.number().int().openapi({
+      example: 1,
+    }),
+    user_id: z.number().int().openapi({
+      example: 3,
+    }),
+    created_at: timestampSchema,
+    updated_at: timestampSchema,
+  })
+  .openapi("Mahasiswa");
+
+export const pembimbingSchema = z
+  .object({
+    id: z.number().int().openapi({
+      example: 1,
+    }),
+    nidn: z.string().openapi({
+      example: "0912345601",
+    }),
+    nama: z.string().openapi({
+      example: "Dr. Andi Wijaya",
+    }),
+    email: z.string().email().openapi({
+      example: "andi@example.com",
+    }),
+    telp: z.string().nullable().openapi({
+      example: "081234567890",
+    }),
+    foto: z.string().nullable().openapi({
+      example: "https://res.cloudinary.com/demo/image/upload/pembimbing.jpg",
+    }),
+    image_public_id: z.string().nullable().openapi({
+      example: "uploads/pembimbing",
+    }),
+    user_id: z.number().int().openapi({
+      example: 4,
+    }),
+    created_at: timestampSchema,
+    updated_at: timestampSchema,
+  })
+  .openapi("Pembimbing");
+
+export const instansiSchema = z
+  .object({
+    id: z.number().int().openapi({
+      example: 1,
+    }),
+    kode: z.string().openapi({
+      example: "INS001",
+    }),
+    nama: z.string().openapi({
+      example: "PT Teknologi Nusantara",
+    }),
+    alamat: z.string().openapi({
+      example: "Jl. Perintis Kemerdekaan No. 10, Makassar",
+    }),
+    telp: z.string().nullable().openapi({
+      example: "0411123456",
+    }),
+    latitude: z.string().nullable().openapi({
+      example: "-5.14766500",
+    }),
+    longitude: z.string().nullable().openapi({
+      example: "119.43273200",
+    }),
+    created_at: timestampSchema,
+    updated_at: timestampSchema,
+  })
+  .openapi("Instansi");
+
+export const kklPeriodeSchema = z
+  .object({
+    id: z.number().int().openapi({
+      example: 1,
+    }),
+    nama: z.string().openapi({
+      example: "KKL 2026 Ganjil",
+    }),
+    tahun: z.string().openapi({
+      example: "2026",
+    }),
+    semester: z.enum(["ganjil", "genap"]).openapi({
+      example: "ganjil",
+    }),
+    max_agt_klp: z.number().int().openapi({
+      example: 5,
+    }),
+    created_at: timestampSchema,
+    updated_at: timestampSchema,
+  })
+  .openapi("KklPeriode");
+
+export const kklKlpSchema = z
+  .object({
+    id: z.number().int().openapi({
+      example: 1,
+    }),
+    kkl_periode_id: z.number().int().openapi({
+      example: 1,
+    }),
+    instansi_id: z.number().int().openapi({
+      example: 1,
+    }),
+    pembimbing_id: z.number().int().openapi({
+      example: 1,
+    }),
+    created_at: timestampSchema,
+    updated_at: timestampSchema,
+  })
+  .openapi("KklKlp");
+
+export const kklAgtSchema = z
+  .object({
+    id: z.number().int().openapi({
+      example: 1,
+    }),
+    kkl_klp_id: z.number().int().openapi({
+      example: 1,
+    }),
+    mahasiswa_id: z.number().int().openapi({
+      example: 1,
+    }),
+    created_at: timestampSchema,
+    updated_at: timestampSchema,
+  })
+  .openapi("KklAgt");
+
 export const userRoleSummarySchema = z
   .object({
     id: z.number().int().openapi({
@@ -61,14 +227,14 @@ export const userSchema = z
     id: z.number().int().openapi({
       example: 1,
     }),
-    email: z.string().email().openapi({
-      example: "admin@example.com",
-    }),
-    name: z.string().openapi({
-      example: "Admin User",
+    username: z.string().openapi({
+      example: "admin",
     }),
     role_id: z.number().int().openapi({
       example: 1,
+    }),
+    is_active: z.boolean().openapi({
+      example: true,
     }),
     created_at: timestampSchema,
     updated_at: timestampSchema,

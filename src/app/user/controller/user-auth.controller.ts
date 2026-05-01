@@ -7,21 +7,21 @@ export class UserAuthController {
     try {
       const body: LoginRequestDto = await c.req.json();
 
-      if (!body.email || !body.password) {
+      if (!body.username || !body.password) {
         return c.json(
           {
             success: false,
-            message: "Email and password are required",
+            message: "Username and password are required",
           },
           400,
         );
       }
 
-      const loginResult = await UserAuthService.login(body.email, body.password);
+      const loginResult = await UserAuthService.login(body.username, body.password);
 
       if (!loginResult) {
         return c.json(
-          { success: false, message: "Invalid email or password" },
+          { success: false, message: "Invalid username or password" },
           401,
         );
       }

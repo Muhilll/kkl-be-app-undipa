@@ -1,5 +1,22 @@
 import { isNotNull, isNull } from "drizzle-orm";
-import { db, menus, role_permissions, roles, users } from "./index";
+import { hash } from "bcryptjs";
+import {
+  db,
+  instansi_penilais,
+  instansis,
+  jurusans,
+  kkl_agts,
+  kkl_klps,
+  kkl_periodes,
+  laporans,
+  mahasiswas,
+  menus,
+  pembimbings,
+  penilaians,
+  role_permissions,
+  roles,
+  users,
+} from "./index";
 
 const roleSeedData = [
   { code: "ADMIN", name: "Administrator" },
@@ -43,6 +60,55 @@ const menuSeedData = [
     parentName: "Master Data",
   },
   {
+    name: "Jurusan",
+    path: "/master-data/jurusans",
+    permissionPath: "/api/jurusans",
+    icon: null,
+    parentName: "Master Data",
+  },
+  {
+    name: "Mahasiswa",
+    path: "/master-data/mahasiswas",
+    permissionPath: "/api/mahasiswas",
+    icon: null,
+    parentName: "Master Data",
+  },
+  {
+    name: "Pembimbing",
+    path: "/master-data/pembimbings",
+    permissionPath: "/api/pembimbings",
+    icon: null,
+    parentName: "Master Data",
+  },
+  {
+    name: "Instansi",
+    path: "/master-data/instansis",
+    permissionPath: "/api/instansis",
+    icon: null,
+    parentName: "Master Data",
+  },
+  {
+    name: "KKL Periode",
+    path: "/master-data/kkl-periodes",
+    permissionPath: "/api/kkl-periodes",
+    icon: null,
+    parentName: "Master Data",
+  },
+  {
+    name: "KKL Kelompok",
+    path: "/master-data/kkl-klps",
+    permissionPath: "/api/kkl-klps",
+    icon: null,
+    parentName: "Master Data",
+  },
+  {
+    name: "KKL Anggota",
+    path: "/master-data/kkl-agts",
+    permissionPath: "/api/kkl-agts",
+    icon: null,
+    parentName: "Master Data",
+  },
+  {
     name: "Menu",
     path: "/web-management/menus",
     permissionPath: "/api/menus",
@@ -59,6 +125,16 @@ const menuSeedData = [
 ];
 
 async function clearAllTables() {
+  await db.delete(penilaians);
+  await db.delete(instansi_penilais);
+  await db.delete(laporans);
+  await db.delete(kkl_agts);
+  await db.delete(kkl_klps);
+  await db.delete(kkl_periodes);
+  await db.delete(pembimbings);
+  await db.delete(mahasiswas);
+  await db.delete(instansis);
+  await db.delete(jurusans);
   await db.delete(role_permissions);
   await db.delete(menus).where(isNotNull(menus.parent_id));
   await db.delete(menus).where(isNull(menus.parent_id));
@@ -79,20 +155,21 @@ async function seed() {
       .$returningId();
 
     console.log("Seeding users...");
+    const adminPassword = await hash("admin123", 10);
+    const userPassword = await hash("user123", 10);
+
     await db.insert(users).values([
       {
-        email: "admin@example.com",
-        password:
-          "$2b$10$zfTsPNHSUcbiTWXmkxWyIuxBPZzG5WPfp/.ycvXNWrJJ2u1IeXYJm",
-        name: "Admin User",
+        username: "admin",
+        password: adminPassword,
         role_id: insertedRoles[0].id,
+        is_active: true,
       },
       {
-        email: "user@example.com",
-        password:
-          "$2b$10$M9TZM2802PugppLmDWqKPe.AqOLG7X7tJdqhnPvNwLfR1JrOl/yWG",
-        name: "Regular User",
+        username: "user",
+        password: userPassword,
         role_id: insertedRoles[1].id,
+        is_active: true,
       },
     ]);
 

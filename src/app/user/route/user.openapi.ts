@@ -20,8 +20,8 @@ const userIdParamsSchema = createNumericPathParamsSchema("id");
 
 const loginRequestSchema = z
   .object({
-    email: z.string().email().openapi({
-      example: "admin@example.com",
+    username: z.string().min(1).openapi({
+      example: "admin",
     }),
     password: z.string().min(1).openapi({
       example: "admin123",
@@ -38,14 +38,14 @@ const loginDataSchema = z
       id: z.number().int().openapi({
         example: 1,
       }),
-      email: z.string().email().openapi({
-        example: "admin@example.com",
-      }),
-      name: z.string().openapi({
-        example: "Admin User",
+      username: z.string().openapi({
+        example: "admin",
       }),
       role_id: z.number().int().openapi({
         example: 1,
+      }),
+      is_active: z.boolean().openapi({
+        example: true,
       }),
     }),
   })
@@ -53,33 +53,33 @@ const loginDataSchema = z
 
 const createUserRequestSchema = z
   .object({
-    email: z.string().email().openapi({
-      example: "staff@example.com",
+    username: z.string().min(1).openapi({
+      example: "staff",
     }),
     password: z.string().min(1).openapi({
       example: "staff123",
     }),
-    name: z.string().min(1).openapi({
-      example: "Staff User",
-    }),
     role_id: z.coerce.number().int().openapi({
       example: 2,
+    }),
+    is_active: z.boolean().optional().openapi({
+      example: true,
     }),
   })
   .openapi("CreateUserRequest");
 
 const updateUserRequestSchema = z
   .object({
-    email: z.string().email().optional().openapi({
-      example: "staff.updated@example.com",
+    username: z.string().min(1).optional().openapi({
+      example: "staff_updated",
     }),
     password: z.string().min(1).optional().openapi({
       example: "newpassword123",
     }),
-    name: z.string().min(1).optional().openapi({
-      example: "Staff User Update",
-    }),
     role_id: createOptionalCoercedIntSchema(3),
+    is_active: z.boolean().optional().openapi({
+      example: true,
+    }),
   })
   .openapi("UpdateUserRequest");
 
@@ -131,8 +131,8 @@ export const loginUserRoute = createRoute({
   },
   responses: {
     200: jsonResponse(loginResponseSchema, "Successful login"),
-    400: jsonResponse(apiErrorResponseSchema, "Email and password are required"),
-    401: jsonResponse(apiErrorResponseSchema, "Invalid email or password"),
+    400: jsonResponse(apiErrorResponseSchema, "Username and password are required"),
+    401: jsonResponse(apiErrorResponseSchema, "Invalid username or password"),
     500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
   },
 });
@@ -222,7 +222,7 @@ export const createUserRoute = createRoute({
     201: jsonResponse(userMutationResponseSchema, "User created successfully"),
     400: jsonResponse(
       apiErrorResponseSchema,
-      "Validation error or email already registered",
+      "Validation error or username already registered",
     ),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),

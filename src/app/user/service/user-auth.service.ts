@@ -5,12 +5,12 @@ import { UserReadRepository } from "../repository/user-read.repository";
 
 export class UserAuthService {
   static async login(
-    email: string,
+    username: string,
     password: string,
   ): Promise<LoginResponseDto | null> {
-    const user = await UserReadRepository.getUserByEmail(email);
+    const user = await UserReadRepository.getUserByUsername(username);
 
-    if (!user) {
+    if (!user || !user.is_active) {
       return null;
     }
 
@@ -22,18 +22,18 @@ export class UserAuthService {
 
     const token = generateToken({
       id: user.id,
-      email: user.email,
-      name: user.name,
+      username: user.username,
       role_id: user.role_id,
+      is_active: user.is_active,
     });
 
     return {
       token,
       user: {
         id: user.id,
-        email: user.email,
-        name: user.name,
+        username: user.username,
         role_id: user.role_id,
+        is_active: user.is_active,
       },
     };
   }

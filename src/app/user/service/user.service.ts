@@ -17,7 +17,9 @@ export class UserService {
   }
 
   static async createUser(payload: CreateUserRequestDto) {
-    const existingUser = await UserReadRepository.getUserByEmail(payload.email);
+    const existingUser = await UserReadRepository.getUserByUsername(
+      payload.username,
+    );
 
     if (existingUser) {
       return { conflict: true as const };

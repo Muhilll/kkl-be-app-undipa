@@ -18,9 +18,9 @@ export type NavigationItem = {
 
 export type UserWithRelationsRow = {
   id: number;
-  email: string;
-  name: string;
+  username: string;
   role_id: number;
+  is_active: boolean;
   created_at: Date;
   updated_at: Date;
   role_ref_id: number;
@@ -30,9 +30,9 @@ export type UserWithRelationsRow = {
 
 export type PublicUser = {
   id: number;
-  email: string;
-  name: string;
+  username: string;
   role_id: number;
+  is_active: boolean;
   created_at: Date;
   updated_at: Date;
   role: {

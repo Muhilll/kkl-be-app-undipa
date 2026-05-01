@@ -1,4 +1,11 @@
 import { getMenuOpenApiDocument } from "../app/menu/route/menu.route";
+import { getJurusanOpenApiDocument } from "../app/jurusan/route/jurusan.route";
+import { getMahasiswaOpenApiDocument } from "../app/mahasiswa/route/mahasiswa.route";
+import { getPembimbingOpenApiDocument } from "../app/pembimbing/route/pembimbing.route";
+import { getInstansiOpenApiDocument } from "../app/instansi/route/instansi.route";
+import { getKklPeriodeOpenApiDocument } from "../app/kkl_periode/route/kkl-periode.route";
+import { getKklKlpOpenApiDocument } from "../app/kkl_klp/route/kkl-klp.route";
+import { getKklAgtOpenApiDocument } from "../app/kkl_agt/route/kkl-agt.route";
 import { getRoleOpenApiDocument } from "../app/role/route/role.route";
 import { getRolePermissionOpenApiDocument } from "../app/role_permission/route/role-permission.route";
 import { getUploadOpenApiDocument } from "../app/upload/route/upload.route";
@@ -129,6 +136,13 @@ function createBaseDocument(baseUrl: string): OpenApiDocument {
       { name: "System", description: "Public health and root endpoints" },
       { name: "Users", description: "Authentication and user management" },
       { name: "Roles", description: "Role master data" },
+      { name: "Jurusans", description: "Jurusan master data" },
+      { name: "Mahasiswas", description: "Mahasiswa master data" },
+      { name: "Pembimbings", description: "Pembimbing master data" },
+      { name: "Instansis", description: "Instansi master data" },
+      { name: "KKL Periodes", description: "KKL periode master data" },
+      { name: "KKL Klps", description: "KKL kelompok data" },
+      { name: "KKL Agts", description: "KKL anggota data" },
       { name: "Menus", description: "Navigation menu management" },
       {
         name: "Role Permissions",
@@ -243,6 +257,22 @@ export function createOpenApiDocument(baseUrl: string) {
   const moduleDocuments = [
     mountOpenApiPaths(getUserOpenApiDocument(baseUrl), "/api/users"),
     mountOpenApiPaths(getRoleOpenApiDocument(baseUrl), "/api/roles"),
+    mountOpenApiPaths(getJurusanOpenApiDocument(baseUrl), "/api/jurusans"),
+    mountOpenApiPaths(
+      getMahasiswaOpenApiDocument(baseUrl),
+      "/api/mahasiswas",
+    ),
+    mountOpenApiPaths(
+      getPembimbingOpenApiDocument(baseUrl),
+      "/api/pembimbings",
+    ),
+    mountOpenApiPaths(getInstansiOpenApiDocument(baseUrl), "/api/instansis"),
+    mountOpenApiPaths(
+      getKklPeriodeOpenApiDocument(baseUrl),
+      "/api/kkl-periodes",
+    ),
+    mountOpenApiPaths(getKklKlpOpenApiDocument(baseUrl), "/api/kkl-klps"),
+    mountOpenApiPaths(getKklAgtOpenApiDocument(baseUrl), "/api/kkl-agts"),
     mountOpenApiPaths(getMenuOpenApiDocument(baseUrl), "/api/menus"),
     mountOpenApiPaths(
       getRolePermissionOpenApiDocument(baseUrl),

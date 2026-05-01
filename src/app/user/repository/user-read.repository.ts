@@ -5,9 +5,9 @@ import { PublicUser, UserWithRelationsRow } from "../contract/user.contract";
 
 const userWithRelationsSelect = {
   id: users.id,
-  email: users.email,
-  name: users.name,
+  username: users.username,
   role_id: users.role_id,
+  is_active: users.is_active,
   created_at: users.created_at,
   updated_at: users.updated_at,
   role_ref_id: roles.id,
@@ -18,9 +18,9 @@ const userWithRelationsSelect = {
 function mapUserWithRelations(user: UserWithRelationsRow): PublicUser {
   return {
     id: user.id,
-    email: user.email,
-    name: user.name,
+    username: user.username,
     role_id: user.role_id,
+    is_active: user.is_active,
     created_at: user.created_at,
     updated_at: user.updated_at,
     role: {
@@ -60,12 +60,12 @@ export class UserReadRepository {
     }
   }
 
-  static async getUserByEmail(email: string) {
+  static async getUserByUsername(username: string) {
     try {
       const result = await db
         .select()
         .from(users)
-        .where(eq(users.email, email))
+        .where(eq(users.username, username))
         .limit(1);
 
       return result[0] || null;

@@ -1,8 +1,13 @@
 import {
   int,
   varchar,
+  text,
+  date,
+  time,
   datetime,
+  decimal,
   boolean,
+  mysqlEnum,
   mysqlTable,
   foreignKey,
 } from "drizzle-orm/mysql-core";
@@ -42,10 +47,10 @@ export const users = mysqlTable(
   "users",
   {
     id: int().primaryKey().autoincrement(),
-    email: varchar({ length: 100 }).notNull().unique(),
+    username: varchar({ length: 100 }).notNull().unique(),
     password: varchar({ length: 255 }).notNull(),
-    name: varchar({ length: 100 }).notNull(),
     role_id: int().notNull(),
+    is_active: boolean().default(true).notNull(),
     created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
     updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
   },
@@ -80,6 +85,229 @@ export const role_permissions = mysqlTable(
     menu_fk: foreignKey({
       columns: [table.menu_id],
       foreignColumns: [menus.id],
+    }),
+  })
+);
+
+// Jurusans Table
+export const jurusans = mysqlTable("jurusans", {
+  id: int().primaryKey().autoincrement(),
+  kode: varchar({ length: 50 }).notNull().unique(),
+  nama: varchar({ length: 100 }).notNull(),
+  created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+  updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
+
+// Mahasiswas Table
+export const mahasiswas = mysqlTable(
+  "mahasiswas",
+  {
+    id: int().primaryKey().autoincrement(),
+    nim: varchar({ length: 50 }).notNull().unique(),
+    password: varchar({ length: 255 }).notNull(),
+    nama: varchar({ length: 100 }).notNull(),
+    email: varchar({ length: 100 }).notNull().unique(),
+    telp: varchar({ length: 30 }),
+    foto: varchar({ length: 255 }),
+    image_public_id: varchar({ length: 255 }),  
+    jurusan_id: int().notNull(),
+    user_id: int().notNull().unique(),
+    created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+    updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (table) => ({
+    jurusan_fk: foreignKey({
+      columns: [table.jurusan_id],
+      foreignColumns: [jurusans.id],
+    }),
+    user_fk: foreignKey({
+      columns: [table.user_id],
+      foreignColumns: [users.id],
+    }),
+  })
+);
+
+// Pembimbings Table
+export const pembimbings = mysqlTable(
+  "pembimbings",
+  {
+    id: int().primaryKey().autoincrement(),
+    nidn: varchar({ length: 50 }).notNull().unique(),
+    password: varchar({ length: 255 }).notNull(),
+    nama: varchar({ length: 100 }).notNull(),
+    email: varchar({ length: 100 }).notNull().unique(),
+    telp: varchar({ length: 30 }),
+    foto: varchar({ length: 255 }),
+    image_public_id: varchar({ length: 255 }),
+    user_id: int().notNull().unique(),
+    created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+    updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (table) => ({
+    user_fk: foreignKey({
+      columns: [table.user_id],
+      foreignColumns: [users.id],
+    }),
+  })
+);
+
+// Instansis Table
+export const instansis = mysqlTable("instansis", {
+  id: int().primaryKey().autoincrement(),
+  kode: varchar({ length: 50 }).notNull().unique(),
+  nama: varchar({ length: 150 }).notNull(),
+  alamat: text().notNull(),
+  telp: varchar({ length: 30 }),
+  latitude: decimal({ precision: 10, scale: 8 }),
+  longitude: decimal({ precision: 11, scale: 8 }),
+  created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+  updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
+
+// KKL Periodes Table
+export const kkl_periodes = mysqlTable("kkl_periodes", {
+  id: int().primaryKey().autoincrement(),
+  nama: varchar({ length: 100 }).notNull(),
+  tahun: varchar({ length: 9 }).notNull(),
+  semester: mysqlEnum(["ganjil", "genap"]).notNull(),
+  max_agt_klp: int().notNull(),
+  created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+  updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
+
+// KKL Klps Table
+export const kkl_klps = mysqlTable(
+  "kkl_klps",
+  {
+    id: int().primaryKey().autoincrement(),
+    kkl_periode_id: int().notNull(),
+    instansi_id: int().notNull(),
+    pembimbing_id: int().notNull(),
+    created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+    updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (table) => ({
+    kkl_periode_fk: foreignKey({
+      columns: [table.kkl_periode_id],
+      foreignColumns: [kkl_periodes.id],
+    }),
+    instansi_fk: foreignKey({
+      columns: [table.instansi_id],
+      foreignColumns: [instansis.id],
+    }),
+    pembimbing_fk: foreignKey({
+      columns: [table.pembimbing_id],
+      foreignColumns: [pembimbings.id],
+    }),
+  })
+);
+
+// KKL Agts Table
+export const kkl_agts = mysqlTable(
+  "kkl_agts",
+  {
+    id: int().primaryKey().autoincrement(),
+    kkl_klp_id: int().notNull(),
+    mahasiswa_id: int().notNull(),
+    created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+    updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (table) => ({
+    kkl_klp_fk: foreignKey({
+      columns: [table.kkl_klp_id],
+      foreignColumns: [kkl_klps.id],
+    }),
+    mahasiswa_fk: foreignKey({
+      columns: [table.mahasiswa_id],
+      foreignColumns: [mahasiswas.id],
+    }),
+  })
+);
+
+// Laporans Table
+export const laporans = mysqlTable(
+  "laporans",
+  {
+    id: int().primaryKey().autoincrement(),
+    kkl_agt_id: int().notNull(),
+    tanggal: date().notNull(),
+    jam: time().notNull(),
+    aktifitas: text().notNull(),
+    file: varchar({ length: 255 }),
+    latitude: decimal({ precision: 10, scale: 8 }),
+    longitude: decimal({ precision: 11, scale: 8 }),
+    jarak: decimal({ precision: 10, scale: 2 }),
+    status: mysqlEnum(["valid", "invalid"]).notNull(),
+    created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+    updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (table) => ({
+    kkl_agt_fk: foreignKey({
+      columns: [table.kkl_agt_id],
+      foreignColumns: [kkl_agts.id],
+    }),
+  })
+);
+
+// Instansi Penilais Table
+export const instansi_penilais = mysqlTable(
+  "instansi_penilais",
+  {
+    id: int().primaryKey().autoincrement(),
+    kkl_klp_id: int().notNull(),
+    virtual_account: varchar({ length: 100 }).notNull().unique(),
+    password: varchar({ length: 255 }).notNull(),
+    nama: varchar({ length: 100 }).notNull(),
+    jabatan: varchar({ length: 100 }).notNull(),
+    user_id: int().notNull().unique(),
+    created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+    updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (table) => ({
+    kkl_klp_fk: foreignKey({
+      columns: [table.kkl_klp_id],
+      foreignColumns: [kkl_klps.id],
+    }),
+    user_fk: foreignKey({
+      columns: [table.user_id],
+      foreignColumns: [users.id],
+    }),
+  })
+);
+
+// Penilaians Table
+export const penilaians = mysqlTable(
+  "penilaians",
+  {
+    id: int().primaryKey().autoincrement(),
+    kkl_agt_id: int().notNull(),
+    instansi_penilai_id: int().notNull(),
+    lama_praktek: int().notNull(),
+    kehadiran: int().notNull(),
+    disiplin: int().notNull(),
+    kejujuran: int().notNull(),
+    kerajinan: int().notNull(),
+    kerja_sama: int().notNull(),
+    sikap: int().notNull(),
+    inisiatif: int().notNull(),
+    tanggung_jawab: int().notNull(),
+    komunikasi: int().notNull(),
+    kebersihan: int().notNull(),
+    penampilan: int().notNull(),
+    kecakapan: int().notNull(),
+    total: int().notNull(),
+    ratarata: decimal({ precision: 5, scale: 2 }).notNull(),
+    created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+    updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (table) => ({
+    kkl_agt_fk: foreignKey({
+      columns: [table.kkl_agt_id],
+      foreignColumns: [kkl_agts.id],
+    }),
+    instansi_penilai_fk: foreignKey({
+      columns: [table.instansi_penilai_id],
+      foreignColumns: [instansi_penilais.id],
     }),
   })
 );

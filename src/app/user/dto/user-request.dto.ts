@@ -1,18 +1,18 @@
 export type LoginRequestDto = {
-  email: string;
+  username: string;
   password: string;
 };
 
 export type CreateUserRequestDto = {
-  email: string;
+  username: string;
   password: string;
-  name: string;
   role_id: number;
+  is_active?: boolean;
 };
 
 export type UpdateUserRequestDto = Partial<{
-  email: string;
+  username: string;
   password: string;
-  name: string;
   role_id: number;
+  is_active: boolean;
 }>;

@@ -5,6 +5,13 @@ import { loggerMiddleware } from './middleware/appToken';
 import { originGuard } from './middleware/originGuard';
 import userRoutes from './app/user/route/user.route';
 import roleRoutes from './app/role/route/role.route';
+import jurusanRoutes from './app/jurusan/route/jurusan.route';
+import mahasiswaRoutes from './app/mahasiswa/route/mahasiswa.route';
+import pembimbingRoutes from './app/pembimbing/route/pembimbing.route';
+import instansiRoutes from './app/instansi/route/instansi.route';
+import kklPeriodeRoutes from './app/kkl_periode/route/kkl-periode.route';
+import kklKlpRoutes from './app/kkl_klp/route/kkl-klp.route';
+import kklAgtRoutes from './app/kkl_agt/route/kkl-agt.route';
 import menuRoutes from './app/menu/route/menu.route';
 import rolePermissionRoutes from './app/role_permission/route/role-permission.route';
 import uploadRoutes from './app/upload/route/upload.route';
@@ -78,6 +85,13 @@ app.get('/docs', (c) => {
 // Note: User routes have public login endpoint, others require JWT
 app.route('/api/users', userRoutes);
 app.route('/api/roles', roleRoutes);
+app.route('/api/jurusans', jurusanRoutes);
+app.route('/api/mahasiswas', mahasiswaRoutes);
+app.route('/api/pembimbings', pembimbingRoutes);
+app.route('/api/instansis', instansiRoutes);
+app.route('/api/kkl-periodes', kklPeriodeRoutes);
+app.route('/api/kkl-klps', kklKlpRoutes);
+app.route('/api/kkl-agts', kklAgtRoutes);
 app.route('/api/menus', menuRoutes);
 app.route('/api/role-permissions', rolePermissionRoutes);
 app.route('/api/uploads', uploadRoutes);

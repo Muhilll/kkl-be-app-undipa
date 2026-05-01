@@ -4,9 +4,9 @@ const JWT_SECRET = process.env.JWT_SECRET!;
 
 export interface TokenPayload {
   id: number;
-  email: string;
-  name: string;
+  username: string;
   role_id: number;
+  is_active: boolean;
 }
 
 type JWTExpire = "1h" | "24h" | "7d";
@@ -14,7 +14,7 @@ type JWTExpire = "1h" | "24h" | "7d";
 /**
  * Generate JWT token
  */
-export function generateToken(payload: TokenPayload, expiresIn: JWTExpire = "24h"): string {
+export function generateToken(payload: TokenPayload, expiresIn: JWTExpire = "1h"): string {
   try {
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn });
     return token;

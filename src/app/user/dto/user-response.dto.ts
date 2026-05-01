@@ -4,9 +4,9 @@ export type LoginResponseDto = {
   token: string;
   user: {
     id: number;
-    email: string;
-    name: string;
+    username: string;
     role_id: number;
+    is_active: boolean;
   };
 };
 

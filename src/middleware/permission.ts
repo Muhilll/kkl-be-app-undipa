@@ -10,9 +10,9 @@ export type PermissionAction =
 
 type AuthUser = {
   id: number;
-  email: string;
-  name: string;
+  username: string;
   role_id: number;
+  is_active: boolean;
 };
 
 const methodToPermissionAction: Record<string, PermissionAction> = {

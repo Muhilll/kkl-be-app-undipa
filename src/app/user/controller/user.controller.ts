@@ -89,11 +89,11 @@ export class UserController {
     try {
       const body: CreateUserRequestDto = await c.req.json();
 
-      if (!body.email || !body.password || !body.name) {
+      if (!body.username || !body.password) {
         return c.json(
           {
             success: false,
-            message: "Email, password, and name are required",
+            message: "Username and password are required",
           },
           400,
         );
@@ -103,7 +103,7 @@ export class UserController {
 
       if (createResult.conflict) {
         return c.json(
-          { success: false, message: "Email already registered" },
+          { success: false, message: "Username already registered" },
           400,
         );
       }
