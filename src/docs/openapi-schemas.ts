@@ -151,6 +151,28 @@ export const instansiSchema = z
   })
   .openapi("Instansi");
 
+export const instansiPenilaiSchema = z
+  .object({
+    id: z.number().int().openapi({
+      example: 1,
+    }),
+    kkl_klp_id: z.number().int().openapi({
+      example: 1,
+    }),
+    virtual_account: z.string().openapi({
+      example: "VA123456789",
+    }),
+    nama: z.string().openapi({
+      example: "Bapak Budi",
+    }),
+    jabatan: z.string().openapi({
+      example: "Manager HRD",
+    }),
+    created_at: timestampSchema,
+    updated_at: timestampSchema,
+  })
+  .openapi("InstansiPenilai");
+
 export const kklPeriodeSchema = z
   .object({
     id: z.number().int().openapi({
@@ -207,6 +229,37 @@ export const kklAgtSchema = z
     updated_at: timestampSchema,
   })
   .openapi("KklAgt");
+
+export const penilaianSchema = z
+  .object({
+    id: z.number().int().openapi({
+      example: 1,
+    }),
+    kkl_agt_id: z.number().int().openapi({
+      example: 1,
+    }),
+    instansi_penilai_id: z.number().int().openapi({
+      example: 1,
+    }),
+    lama_praktek: z.number().int().openapi({ example: 85 }),
+    kehadiran: z.number().int().openapi({ example: 90 }),
+    disiplin: z.number().int().openapi({ example: 85 }),
+    kejujuran: z.number().int().openapi({ example: 95 }),
+    kerajinan: z.number().int().openapi({ example: 80 }),
+    kerja_sama: z.number().int().openapi({ example: 85 }),
+    sikap: z.number().int().openapi({ example: 90 }),
+    inisiatif: z.number().int().openapi({ example: 80 }),
+    tanggung_jawab: z.number().int().openapi({ example: 85 }),
+    komunikasi: z.number().int().openapi({ example: 85 }),
+    kebersihan: z.number().int().openapi({ example: 90 }),
+    penampilan: z.number().int().openapi({ example: 90 }),
+    kecakapan: z.number().int().openapi({ example: 85 }),
+    total: z.number().int().openapi({ example: 1225 }),
+    ratarata: z.string().openapi({ example: "87.50" }), // Decimal mapped to string usually in zod/openapi
+    created_at: timestampSchema,
+    updated_at: timestampSchema,
+  })
+  .openapi("Penilaian");
 
 export const userRoleSummarySchema = z
   .object({

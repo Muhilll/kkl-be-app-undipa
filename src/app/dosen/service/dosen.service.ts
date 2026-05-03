@@ -20,12 +20,10 @@ export class DosenService {
   }
 
   static async createDosen(payload: CreateDosenRequestDto) {
-    const existingDosen =
-      await DosenReadRepository.getDosenByUniqueFields(
-        payload.nidn,
-        payload.email,
-        payload.user_id,
-      );
+    const existingDosen = await DosenReadRepository.getDosenByUniqueFields(
+      payload.nidn,
+      payload.email,
+    );
 
     if (existingDosen) {
       return { conflict: true as const };

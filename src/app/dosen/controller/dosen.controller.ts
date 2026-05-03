@@ -97,13 +97,12 @@ export class DosenController {
         !body.nidn ||
         !body.password ||
         !body.nama ||
-        !body.email ||
-        !body.user_id
+        !body.email
       ) {
         return c.json(
           {
             success: false,
-            message: "NIDN, password, nama, email, and user_id are required",
+            message: "NIDN, password, nama, and email are required",
           },
           400,
         );

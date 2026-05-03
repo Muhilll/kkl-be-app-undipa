@@ -41,7 +41,6 @@ export class DosenReadRepository {
   static async getDosenByUniqueFields(
     nidn: string,
     email: string,
-    userId: number,
   ) {
     try {
       const result = await db
@@ -51,7 +50,6 @@ export class DosenReadRepository {
           or(
             eq(dosens.nidn, nidn),
             eq(dosens.email, email),
-            eq(dosens.user_id, userId),
           ),
         )
         .limit(1);

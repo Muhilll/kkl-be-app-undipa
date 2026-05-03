@@ -1,4 +1,4 @@
-import { createRoute } from "@hono/zod-openapi";
+import { createRoute, z } from "@hono/zod-openapi";
 import { appTokenMiddleware } from "../../../middleware/appToken";
 import { jwtMiddleware } from "../../../middleware/auth";
 import {
@@ -22,6 +22,17 @@ export const createUploadSignatureRoute = createRoute({
   summary: "Create Cloudinary signed upload params",
   security: protectedSecurity,
   middleware: [jwtMiddleware, appTokenMiddleware] as const,
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            target: z.enum(["mahasiswa", "laporan", "dosen"]).optional(),
+          }),
+        },
+      },
+    },
+  },
   responses: {
     200: jsonResponse(
       uploadSignatureEnvelopeSchema,

@@ -6,7 +6,6 @@ export type CreateDosenRequestDto = {
   telp?: string | null;
   foto?: string | null;
   image_public_id?: string | null;
-  user_id: number;
 };
 
 export type UpdateDosenRequestDto = Partial<{
@@ -17,5 +16,4 @@ export type UpdateDosenRequestDto = Partial<{
   telp: string | null;
   foto: string | null;
   image_public_id: string | null;
-  user_id: number;
 }>;

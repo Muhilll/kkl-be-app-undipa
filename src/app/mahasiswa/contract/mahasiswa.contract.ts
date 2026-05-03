@@ -10,4 +10,8 @@ export type MahasiswaEntity = {
   user_id: number;
   created_at: Date;
   updated_at: Date;
+  jurusan?: {
+    kode: string;
+    nama: string;
+  };
 };

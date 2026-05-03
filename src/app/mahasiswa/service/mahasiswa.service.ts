@@ -20,11 +20,9 @@ export class MahasiswaService {
   }
 
   static async createMahasiswa(payload: CreateMahasiswaRequestDto) {
-    const existingMahasiswa =
-      await MahasiswaReadRepository.getMahasiswaByUniqueFields(
+    const existingMahasiswa = await MahasiswaReadRepository.getMahasiswaByUniqueFields(
         payload.nim,
         payload.email,
-        payload.user_id,
       );
 
     if (existingMahasiswa) {

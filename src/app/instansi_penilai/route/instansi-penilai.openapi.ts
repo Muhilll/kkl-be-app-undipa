@@ -11,85 +11,71 @@ import {
   protectedSecurity,
   writeResultSchema,
 } from "../../../docs/openapi-common";
-import { dosenSchema } from "../../../docs/openapi-schemas";
+import { instansiPenilaiSchema } from "../../../docs/openapi-schemas";
 
-const dosenIdParamsSchema = createNumericPathParamsSchema("id");
+const instansiPenilaiIdParamsSchema = createNumericPathParamsSchema("id");
 
-const createDosenRequestSchema = z
+const createInstansiPenilaiRequestSchema = z
   .object({
-    nidn: z.string().min(1).openapi({
-      example: "0912345601",
+    kkl_klp_id: z.coerce.number().int().openapi({
+      example: 1,
+    }),
+    virtual_account: z.string().min(1).openapi({
+      example: "VA123456789",
     }),
     password: z.string().min(1).openapi({
-      example: "dosen123",
+      example: "password123",
     }),
     nama: z.string().min(1).openapi({
-      example: "Dr. Andi Wijaya",
+      example: "Bapak Budi",
     }),
-    email: z.string().email().openapi({
-      example: "andi@example.com",
-    }),
-    telp: z.string().nullable().optional().openapi({
-      example: "081234567890",
-    }),
-    foto: z.string().nullable().optional().openapi({
-      example: "https://res.cloudinary.com/demo/image/upload/dosen.jpg",
-    }),
-    image_public_id: z.string().nullable().optional().openapi({
-      example: "uploads/dosen",
+    jabatan: z.string().min(1).openapi({
+      example: "Manager HRD",
     }),
   })
-  .openapi("CreateDosenRequest");
+  .openapi("CreateInstansiPenilaiRequest");
 
-const updateDosenRequestSchema = z
+const updateInstansiPenilaiRequestSchema = z
   .object({
-    nidn: z.string().min(1).optional().openapi({
-      example: "0912345602",
+    kkl_klp_id: createOptionalCoercedIntSchema(1),
+    virtual_account: z.string().min(1).optional().openapi({
+      example: "VA123456789",
     }),
     password: z.string().min(1).optional().openapi({
       example: "newpassword123",
     }),
     nama: z.string().min(1).optional().openapi({
-      example: "Dr. Andi Wijaya Update",
+      example: "Bapak Budi Update",
     }),
-    email: z.string().email().optional().openapi({
-      example: "andi.update@example.com",
-    }),
-    telp: z.string().nullable().optional().openapi({
-      example: "081234567891",
-    }),
-    foto: z.string().nullable().optional().openapi({
-      example: "https://res.cloudinary.com/demo/image/upload/dosen-update.jpg",
-    }),
-    image_public_id: z.string().nullable().optional().openapi({
-      example: "uploads/dosen-update",
+    jabatan: z.string().min(1).optional().openapi({
+      example: "General Manager",
     }),
   })
-  .openapi("UpdateDosenRequest");
+  .openapi("UpdateInstansiPenilaiRequest");
 
-const dosenListResponseSchema = createSuccessEnvelopeSchema(
-  "DosenListResponse",
-  z.array(dosenSchema),
-  "Dosens fetched successfully",
+const instansiPenilaiListResponseSchema = createSuccessEnvelopeSchema(
+  "InstansiPenilaiListResponse",
+  z.array(instansiPenilaiSchema),
+  "Instansi Penilais fetched successfully",
 );
 
-const dosenDetailResponseSchema = createSuccessEnvelopeSchema(
-  "DosenDetailResponse",
-  dosenSchema,
-  "Dosen fetched successfully",
+const instansiPenilaiDetailResponseSchema = createSuccessEnvelopeSchema(
+  "InstansiPenilaiDetailResponse",
+  instansiPenilaiSchema,
+  "Instansi Penilai fetched successfully",
 );
 
-const dosenMutationResponseSchema = createSuccessEnvelopeSchema(
-  "DosenMutationResponse",
+const instansiPenilaiMutationResponseSchema = createSuccessEnvelopeSchema(
+  "InstansiPenilaiMutationResponse",
   writeResultSchema,
-  "Dosen created successfully",
+  "Instansi Penilai created successfully",
 );
 
-export const getAllDosensRoute = createRoute({
+export const getAllInstansiPenilaisRoute = createRoute({
   method: "get",
   path: "/",
-  tags: ["Dosens"],
-  summary: "Get all dosens",
+  tags: ["InstansiPenilais"],
+  summary: "Get all instansi penilais",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -98,8 +84,8 @@ export const getAllDosensRoute = createRoute({
   ] as const,
   responses: {
     200: jsonResponse(
-      dosenListResponseSchema,
-      "Dosens fetched successfully",
+      instansiPenilaiListResponseSchema,
+      "Instansi Penilais fetched successfully",
     ),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
@@ -107,11 +93,11 @@ export const getAllDosensRoute = createRoute({
   },
 });
 
-export const getDosenByIdRoute = createRoute({
+export const getInstansiPenilaiByIdRoute = createRoute({
   method: "get",
   path: "/{id}",
-  tags: ["Dosens"],
-  summary: "Get dosen by id",
+  tags: ["InstansiPenilais"],
+  summary: "Get instansi penilai by id",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -119,26 +105,26 @@ export const getDosenByIdRoute = createRoute({
     requirePermission(),
   ] as const,
   request: {
-    params: dosenIdParamsSchema,
+    params: instansiPenilaiIdParamsSchema,
   },
   responses: {
     200: jsonResponse(
-      dosenDetailResponseSchema,
-      "Dosen fetched successfully",
+      instansiPenilaiDetailResponseSchema,
+      "Instansi Penilai fetched successfully",
     ),
-    400: jsonResponse(apiErrorResponseSchema, "Invalid dosen id"),
+    400: jsonResponse(apiErrorResponseSchema, "Invalid instansi penilai id"),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
-    404: jsonResponse(apiErrorResponseSchema, "Dosen not found"),
+    404: jsonResponse(apiErrorResponseSchema, "Instansi Penilai not found"),
     500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
   },
 });
 
-export const createDosenRoute = createRoute({
+export const createInstansiPenilaiRoute = createRoute({
   method: "post",
   path: "/",
-  tags: ["Dosens"],
-  summary: "Create dosen",
+  tags: ["InstansiPenilais"],
+  summary: "Create instansi penilai",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -150,15 +136,15 @@ export const createDosenRoute = createRoute({
       required: true,
       content: {
         "application/json": {
-          schema: createDosenRequestSchema,
+          schema: createInstansiPenilaiRequestSchema,
         },
       },
     },
   },
   responses: {
     201: jsonResponse(
-      dosenMutationResponseSchema,
-      "Dosen created successfully",
+      instansiPenilaiMutationResponseSchema,
+      "Instansi Penilai created successfully",
     ),
     400: jsonResponse(apiErrorResponseSchema, "Validation error"),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
@@ -167,11 +153,11 @@ export const createDosenRoute = createRoute({
   },
 });
 
-export const updateDosenRoute = createRoute({
+export const updateInstansiPenilaiRoute = createRoute({
   method: "put",
   path: "/{id}",
-  tags: ["Dosens"],
-  summary: "Update dosen",
+  tags: ["InstansiPenilais"],
+  summary: "Update instansi penilai",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -179,34 +165,34 @@ export const updateDosenRoute = createRoute({
     requirePermission(),
   ] as const,
   request: {
-    params: dosenIdParamsSchema,
+    params: instansiPenilaiIdParamsSchema,
     body: {
       required: true,
       content: {
         "application/json": {
-          schema: updateDosenRequestSchema,
+          schema: updateInstansiPenilaiRequestSchema,
         },
       },
     },
   },
   responses: {
     200: jsonResponse(
-      dosenMutationResponseSchema,
-      "Dosen updated successfully",
+      instansiPenilaiMutationResponseSchema,
+      "Instansi Penilai updated successfully",
     ),
     400: jsonResponse(apiErrorResponseSchema, "Validation error"),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
-    404: jsonResponse(apiErrorResponseSchema, "Dosen not found"),
+    404: jsonResponse(apiErrorResponseSchema, "Instansi Penilai not found"),
     500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
   },
 });
 
-export const deleteDosenRoute = createRoute({
+export const deleteInstansiPenilaiRoute = createRoute({
   method: "delete",
   path: "/{id}",
-  tags: ["Dosens"],
-  summary: "Delete dosen",
+  tags: ["InstansiPenilais"],
+  summary: "Delete instansi penilai",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -214,17 +200,17 @@ export const deleteDosenRoute = createRoute({
     requirePermission(),
   ] as const,
   request: {
-    params: dosenIdParamsSchema,
+    params: instansiPenilaiIdParamsSchema,
   },
   responses: {
     200: jsonResponse(
-      dosenMutationResponseSchema,
-      "Dosen deleted successfully",
+      instansiPenilaiMutationResponseSchema,
+      "Instansi Penilai deleted successfully",
     ),
-    400: jsonResponse(apiErrorResponseSchema, "Invalid dosen id"),
+    400: jsonResponse(apiErrorResponseSchema, "Invalid instansi penilai id"),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
-    404: jsonResponse(apiErrorResponseSchema, "Dosen not found"),
+    404: jsonResponse(apiErrorResponseSchema, "Instansi Penilai not found"),
     500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
   },
 });

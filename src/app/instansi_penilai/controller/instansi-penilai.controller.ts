@@ -1,18 +1,18 @@
 import { Context } from "hono";
 import {
-  CreateMahasiswaRequestDto,
-  UpdateMahasiswaRequestDto,
-} from "../dto/mahasiswa-request.dto";
-import { MahasiswaService } from "../service/mahasiswa.service";
+  CreateInstansiPenilaiRequestDto,
+  UpdateInstansiPenilaiRequestDto,
+} from "../dto/instansi-penilai-request.dto";
+import { InstansiPenilaiService } from "../service/instansi-penilai.service";
 
-type ParsedMahasiswaId =
+type ParsedInstansiPenilaiId =
   | { success: true; id: number }
   | { success: false; error: string };
 
-export class MahasiswaController {
-  private static parseMahasiswaIdParam(
+export class InstansiPenilaiController {
+  private static parseInstansiPenilaiIdParam(
     idParam: string | undefined,
-  ): ParsedMahasiswaId {
+  ): ParsedInstansiPenilaiId {
     if (!idParam) {
       return {
         success: false,
@@ -25,7 +25,7 @@ export class MahasiswaController {
     if (isNaN(id)) {
       return {
         success: false,
-        error: "Invalid mahasiswa ID",
+        error: "Invalid instansi penilai ID",
       };
     }
 
@@ -37,12 +37,12 @@ export class MahasiswaController {
 
   static async getAll(c: Context) {
     try {
-      const mahasiswas = await MahasiswaService.getAllMahasiswas();
+      const instansiPenilais = await InstansiPenilaiService.getAllInstansiPenilais();
 
       return c.json({
         success: true,
-        data: mahasiswas,
-        message: "Mahasiswas fetched successfully",
+        data: instansiPenilais,
+        message: "Instansi Penilais fetched successfully",
       });
     } catch (error) {
       return c.json(
@@ -58,7 +58,7 @@ export class MahasiswaController {
 
   static async getById(c: Context) {
     try {
-      const parsedId = MahasiswaController.parseMahasiswaIdParam(
+      const parsedId = InstansiPenilaiController.parseInstansiPenilaiIdParam(
         c.req.param("id"),
       );
 
@@ -66,16 +66,16 @@ export class MahasiswaController {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const mahasiswa = await MahasiswaService.getMahasiswaById(parsedId.id);
+      const instansiPenilai = await InstansiPenilaiService.getInstansiPenilaiById(parsedId.id);
 
-      if (!mahasiswa) {
-        return c.json({ success: false, message: "Mahasiswa not found" }, 404);
+      if (!instansiPenilai) {
+        return c.json({ success: false, message: "Instansi Penilai not found" }, 404);
       }
 
       return c.json({
         success: true,
-        data: mahasiswa,
-        message: "Mahasiswa fetched successfully",
+        data: instansiPenilai,
+        message: "Instansi Penilai fetched successfully",
       });
     } catch (error) {
       return c.json(
@@ -91,32 +91,31 @@ export class MahasiswaController {
 
   static async create(c: Context) {
     try {
-      const body: CreateMahasiswaRequestDto = await c.req.json();
+      const body: CreateInstansiPenilaiRequestDto = await c.req.json();
 
       if (
-        !body.nim ||
+        !body.kkl_klp_id ||
+        !body.virtual_account ||
         !body.password ||
         !body.nama ||
-        !body.email ||
-        !body.jurusan_id
+        !body.jabatan
       ) {
         return c.json(
           {
             success: false,
-            message:
-              "NIM, password, nama, email, and jurusan_id are required",
+            message: "kkl_klp_id, virtual_account, password, nama, and jabatan are required",
           },
           400,
         );
       }
 
-      const createResult = await MahasiswaService.createMahasiswa(body);
+      const createResult = await InstansiPenilaiService.createInstansiPenilai(body);
 
       if (createResult.conflict) {
         return c.json(
           {
             success: false,
-            message: "Mahasiswa NIM, email, or user_id already exists",
+            message: "Instansi Penilai virtual_account already exists",
           },
           400,
         );
@@ -126,7 +125,7 @@ export class MahasiswaController {
         {
           success: true,
           data: createResult.result,
-          message: "Mahasiswa created successfully",
+          message: "Instansi Penilai created successfully",
         },
         201,
       );
@@ -144,7 +143,7 @@ export class MahasiswaController {
 
   static async update(c: Context) {
     try {
-      const parsedId = MahasiswaController.parseMahasiswaIdParam(
+      const parsedId = InstansiPenilaiController.parseInstansiPenilaiIdParam(
         c.req.param("id"),
       );
 
@@ -152,20 +151,20 @@ export class MahasiswaController {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const body: UpdateMahasiswaRequestDto = await c.req.json();
-      const updateResult = await MahasiswaService.updateMahasiswa(
+      const body: UpdateInstansiPenilaiRequestDto = await c.req.json();
+      const updateResult = await InstansiPenilaiService.updateInstansiPenilai(
         parsedId.id,
         body,
       );
 
       if (!updateResult) {
-        return c.json({ success: false, message: "Mahasiswa not found" }, 404);
+        return c.json({ success: false, message: "Instansi Penilai not found" }, 404);
       }
 
       return c.json({
         success: true,
         data: updateResult.result,
-        message: "Mahasiswa updated successfully",
+        message: "Instansi Penilai updated successfully",
       });
     } catch (error) {
       return c.json(
@@ -181,7 +180,7 @@ export class MahasiswaController {
 
   static async delete(c: Context) {
     try {
-      const parsedId = MahasiswaController.parseMahasiswaIdParam(
+      const parsedId = InstansiPenilaiController.parseInstansiPenilaiIdParam(
         c.req.param("id"),
       );
 
@@ -189,16 +188,18 @@ export class MahasiswaController {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const deleteResult = await MahasiswaService.deleteMahasiswa(parsedId.id);
+      const deleteResult = await InstansiPenilaiService.deleteInstansiPenilai(
+        parsedId.id,
+      );
 
       if (!deleteResult) {
-        return c.json({ success: false, message: "Mahasiswa not found" }, 404);
+        return c.json({ success: false, message: "Instansi Penilai not found" }, 404);
       }
 
       return c.json({
         success: true,
         data: deleteResult.result,
-        message: "Mahasiswa deleted successfully",
+        message: "Instansi Penilai deleted successfully",
       });
     } catch (error) {
       return c.json(

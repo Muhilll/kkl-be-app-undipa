@@ -41,9 +41,6 @@ const createMahasiswaRequestSchema = z
     jurusan_id: z.coerce.number().int().openapi({
       example: 1,
     }),
-    user_id: z.coerce.number().int().openapi({
-      example: 3,
-    }),
   })
   .openapi("CreateMahasiswaRequest");
 
@@ -71,7 +68,6 @@ const updateMahasiswaRequestSchema = z
       example: "uploads/foto-update",
     }),
     jurusan_id: createOptionalCoercedIntSchema(1),
-    user_id: createOptionalCoercedIntSchema(3),
   })
   .openapi("UpdateMahasiswaRequest");
 

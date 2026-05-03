@@ -1,6 +1,6 @@
 import { eq, or } from "drizzle-orm";
 import { db } from "../../../db";
-import { mahasiswas } from "../../../db/schema";
+import { mahasiswas, jurusans } from "../../../db/schema";
 
 const mahasiswaSelect = {
   id: mahasiswas.id,
@@ -16,10 +16,23 @@ const mahasiswaSelect = {
   updated_at: mahasiswas.updated_at,
 };
 
+const jurusanSelect = {
+  kode: jurusans.kode,
+  nama: jurusans.nama,
+};
+
 export class MahasiswaReadRepository {
   static async getAllMahasiswas() {
     try {
-      return await db.select(mahasiswaSelect).from(mahasiswas);
+      const rows = await db
+        .select({ ...mahasiswaSelect, jurusan: jurusanSelect })
+        .from(mahasiswas)
+        .leftJoin(jurusans, eq(mahasiswas.jurusan_id, jurusans.id));
+
+      return rows.map((row) => ({
+        ...row,
+        jurusan: row.jurusan ?? undefined,
+      }));
     } catch (error) {
       throw new Error(`Failed to fetch mahasiswas: ${error}`);
     }
@@ -28,12 +41,18 @@ export class MahasiswaReadRepository {
   static async getMahasiswaById(id: number) {
     try {
       const result = await db
-        .select(mahasiswaSelect)
+        .select({ ...mahasiswaSelect, jurusan: jurusanSelect })
         .from(mahasiswas)
+        .leftJoin(jurusans, eq(mahasiswas.jurusan_id, jurusans.id))
         .where(eq(mahasiswas.id, id))
         .limit(1);
 
-      return result[0] || null;
+      if (!result[0]) return null;
+
+      return {
+        ...result[0],
+        jurusan: result[0].jurusan ?? undefined,
+      };
     } catch (error) {
       throw new Error(`Failed to fetch mahasiswa: ${error}`);
     }
@@ -42,7 +61,6 @@ export class MahasiswaReadRepository {
   static async getMahasiswaByUniqueFields(
     nim: string,
     email: string,
-    userId: number,
   ) {
     try {
       const result = await db
@@ -52,7 +70,6 @@ export class MahasiswaReadRepository {
           or(
             eq(mahasiswas.nim, nim),
             eq(mahasiswas.email, email),
-            eq(mahasiswas.user_id, userId),
           ),
         )
         .limit(1);

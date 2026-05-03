@@ -6,7 +6,16 @@ function getCloudinaryUrl() {
   return process.env.CLOUDINARY_URL;
 }
 
-function getCloudinaryFolder() {
+function getCloudinaryFolder(target?: string) {
+  if (target === "mahasiswa" && process.env.CLOUDINARY_FOLDER_MAHASISWA) {
+    return process.env.CLOUDINARY_FOLDER_MAHASISWA;
+  }
+  if (target === "dosen" && process.env.CLOUDINARY_FOLDER_DOSEN) {
+    return process.env.CLOUDINARY_FOLDER_DOSEN;
+  }
+  if (target === "laporan" && process.env.CLOUDINARY_FOLDER_LAPORAN) {
+    return process.env.CLOUDINARY_FOLDER_LAPORAN;
+  }
   return process.env.CLOUDINARY_FOLDER || DEFAULT_CLOUDINARY_FOLDER;
 }
 
@@ -52,7 +61,7 @@ export type CloudinarySignedUploadParams = {
   uploadUrl: string;
 };
 
-export function createSignedUploadParams(): CloudinarySignedUploadParams {
+export function createSignedUploadParams(target?: string): CloudinarySignedUploadParams {
   const cloudinaryUrl = getCloudinaryUrl();
 
   if (!cloudinaryUrl) {
@@ -60,7 +69,7 @@ export function createSignedUploadParams(): CloudinarySignedUploadParams {
   }
 
   const config = parseCloudinaryUrl(cloudinaryUrl);
-  const folder = getCloudinaryFolder();
+  const folder = getCloudinaryFolder(target);
   const timestamp = Math.floor(Date.now() / 1000);
   const signature = cloudinary.utils.api_sign_request(
     {

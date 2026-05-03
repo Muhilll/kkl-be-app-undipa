@@ -1,18 +1,18 @@
 import { Context } from "hono";
 import {
-  CreateMahasiswaRequestDto,
-  UpdateMahasiswaRequestDto,
-} from "../dto/mahasiswa-request.dto";
-import { MahasiswaService } from "../service/mahasiswa.service";
+  CreatePenilaianRequestDto,
+  UpdatePenilaianRequestDto,
+} from "../dto/penilaian-request.dto";
+import { PenilaianService } from "../service/penilaian.service";
 
-type ParsedMahasiswaId =
+type ParsedPenilaianId =
   | { success: true; id: number }
   | { success: false; error: string };
 
-export class MahasiswaController {
-  private static parseMahasiswaIdParam(
+export class PenilaianController {
+  private static parsePenilaianIdParam(
     idParam: string | undefined,
-  ): ParsedMahasiswaId {
+  ): ParsedPenilaianId {
     if (!idParam) {
       return {
         success: false,
@@ -25,7 +25,7 @@ export class MahasiswaController {
     if (isNaN(id)) {
       return {
         success: false,
-        error: "Invalid mahasiswa ID",
+        error: "Invalid penilaian ID",
       };
     }
 
@@ -37,12 +37,12 @@ export class MahasiswaController {
 
   static async getAll(c: Context) {
     try {
-      const mahasiswas = await MahasiswaService.getAllMahasiswas();
+      const penilaians = await PenilaianService.getAllPenilaians();
 
       return c.json({
         success: true,
-        data: mahasiswas,
-        message: "Mahasiswas fetched successfully",
+        data: penilaians,
+        message: "Penilaians fetched successfully",
       });
     } catch (error) {
       return c.json(
@@ -58,7 +58,7 @@ export class MahasiswaController {
 
   static async getById(c: Context) {
     try {
-      const parsedId = MahasiswaController.parseMahasiswaIdParam(
+      const parsedId = PenilaianController.parsePenilaianIdParam(
         c.req.param("id"),
       );
 
@@ -66,16 +66,16 @@ export class MahasiswaController {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const mahasiswa = await MahasiswaService.getMahasiswaById(parsedId.id);
+      const penilaian = await PenilaianService.getPenilaianById(parsedId.id);
 
-      if (!mahasiswa) {
-        return c.json({ success: false, message: "Mahasiswa not found" }, 404);
+      if (!penilaian) {
+        return c.json({ success: false, message: "Penilaian not found" }, 404);
       }
 
       return c.json({
         success: true,
-        data: mahasiswa,
-        message: "Mahasiswa fetched successfully",
+        data: penilaian,
+        message: "Penilaian fetched successfully",
       });
     } catch (error) {
       return c.json(
@@ -91,42 +91,31 @@ export class MahasiswaController {
 
   static async create(c: Context) {
     try {
-      const body: CreateMahasiswaRequestDto = await c.req.json();
+      const body: CreatePenilaianRequestDto = await c.req.json();
 
+      // Basic validation for all required fields
       if (
-        !body.nim ||
-        !body.password ||
-        !body.nama ||
-        !body.email ||
-        !body.jurusan_id
+        body.kkl_agt_id === undefined ||
+        body.instansi_penilai_id === undefined ||
+        body.total === undefined ||
+        !body.ratarata
       ) {
         return c.json(
           {
             success: false,
-            message:
-              "NIM, password, nama, email, and jurusan_id are required",
+            message: "Missing required fields for Penilaian",
           },
           400,
         );
       }
 
-      const createResult = await MahasiswaService.createMahasiswa(body);
-
-      if (createResult.conflict) {
-        return c.json(
-          {
-            success: false,
-            message: "Mahasiswa NIM, email, or user_id already exists",
-          },
-          400,
-        );
-      }
+      const createResult = await PenilaianService.createPenilaian(body);
 
       return c.json(
         {
           success: true,
           data: createResult.result,
-          message: "Mahasiswa created successfully",
+          message: "Penilaian created successfully",
         },
         201,
       );
@@ -144,7 +133,7 @@ export class MahasiswaController {
 
   static async update(c: Context) {
     try {
-      const parsedId = MahasiswaController.parseMahasiswaIdParam(
+      const parsedId = PenilaianController.parsePenilaianIdParam(
         c.req.param("id"),
       );
 
@@ -152,20 +141,20 @@ export class MahasiswaController {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const body: UpdateMahasiswaRequestDto = await c.req.json();
-      const updateResult = await MahasiswaService.updateMahasiswa(
+      const body: UpdatePenilaianRequestDto = await c.req.json();
+      const updateResult = await PenilaianService.updatePenilaian(
         parsedId.id,
         body,
       );
 
       if (!updateResult) {
-        return c.json({ success: false, message: "Mahasiswa not found" }, 404);
+        return c.json({ success: false, message: "Penilaian not found" }, 404);
       }
 
       return c.json({
         success: true,
         data: updateResult.result,
-        message: "Mahasiswa updated successfully",
+        message: "Penilaian updated successfully",
       });
     } catch (error) {
       return c.json(
@@ -181,7 +170,7 @@ export class MahasiswaController {
 
   static async delete(c: Context) {
     try {
-      const parsedId = MahasiswaController.parseMahasiswaIdParam(
+      const parsedId = PenilaianController.parsePenilaianIdParam(
         c.req.param("id"),
       );
 
@@ -189,16 +178,18 @@ export class MahasiswaController {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const deleteResult = await MahasiswaService.deleteMahasiswa(parsedId.id);
+      const deleteResult = await PenilaianService.deletePenilaian(
+        parsedId.id,
+      );
 
       if (!deleteResult) {
-        return c.json({ success: false, message: "Mahasiswa not found" }, 404);
+        return c.json({ success: false, message: "Penilaian not found" }, 404);
       }
 
       return c.json({
         success: true,
         data: deleteResult.result,
-        message: "Mahasiswa deleted successfully",
+        message: "Penilaian deleted successfully",
       });
     } catch (error) {
       return c.json(

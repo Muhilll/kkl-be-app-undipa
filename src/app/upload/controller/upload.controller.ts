@@ -4,7 +4,10 @@ import { createSignedUploadParams } from "../../../utils/cloudinary";
 export class UploadController {
   static async createSignature(c: Context) {
     try {
-      const signedParams = createSignedUploadParams();
+      const body = await c.req.json().catch(() => ({}));
+      const target = body.target;
+
+      const signedParams = createSignedUploadParams(target);
 
       return c.json({
         success: true,
