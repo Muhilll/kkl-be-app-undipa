@@ -1,4 +1,4 @@
-export type PembimbingEntity = {
+export type DosenEntity = {
   id: number;
   nidn: string;
   nama: string;

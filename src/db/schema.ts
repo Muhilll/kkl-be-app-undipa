@@ -127,9 +127,9 @@ export const mahasiswas = mysqlTable(
   })
 );
 
-// Pembimbings Table
-export const pembimbings = mysqlTable(
-  "pembimbings",
+// Dosens Table
+export const dosens = mysqlTable(
+  "dosens",
   {
     id: int().primaryKey().autoincrement(),
     nidn: varchar({ length: 50 }).notNull().unique(),
@@ -182,7 +182,7 @@ export const kkl_klps = mysqlTable(
     id: int().primaryKey().autoincrement(),
     kkl_periode_id: int().notNull(),
     instansi_id: int().notNull(),
-    pembimbing_id: int().notNull(),
+    dosen_id: int().notNull(),
     created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
     updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
   },
@@ -195,9 +195,9 @@ export const kkl_klps = mysqlTable(
       columns: [table.instansi_id],
       foreignColumns: [instansis.id],
     }),
-    pembimbing_fk: foreignKey({
-      columns: [table.pembimbing_id],
-      foreignColumns: [pembimbings.id],
+    dosen_fk: foreignKey({
+      columns: [table.dosen_id],
+      foreignColumns: [dosens.id],
     }),
   })
 );

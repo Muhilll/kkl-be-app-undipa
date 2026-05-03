@@ -11,7 +11,7 @@ import {
   laporans,
   mahasiswas,
   menus,
-  pembimbings,
+  dosens,
   penilaians,
   role_permissions,
   roles,
@@ -74,9 +74,9 @@ const menuSeedData = [
     parentName: "Master Data",
   },
   {
-    name: "Pembimbing",
-    path: "/master-data/pembimbings",
-    permissionPath: "/api/pembimbings",
+    name: "Dosen",
+    path: "/master-data/dosens",
+    permissionPath: "/api/dosens",
     icon: null,
     parentName: "Master Data",
   },
@@ -131,7 +131,7 @@ async function clearAllTables() {
   await db.delete(kkl_agts);
   await db.delete(kkl_klps);
   await db.delete(kkl_periodes);
-  await db.delete(pembimbings);
+  await db.delete(dosens);
   await db.delete(mahasiswas);
   await db.delete(instansis);
   await db.delete(jurusans);

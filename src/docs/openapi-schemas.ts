@@ -92,7 +92,7 @@ export const mahasiswaSchema = z
   })
   .openapi("Mahasiswa");
 
-export const pembimbingSchema = z
+export const dosenSchema = z
   .object({
     id: z.number().int().openapi({
       example: 1,
@@ -110,10 +110,10 @@ export const pembimbingSchema = z
       example: "081234567890",
     }),
     foto: z.string().nullable().openapi({
-      example: "https://res.cloudinary.com/demo/image/upload/pembimbing.jpg",
+      example: "https://res.cloudinary.com/demo/image/upload/dosen.jpg",
     }),
     image_public_id: z.string().nullable().openapi({
-      example: "uploads/pembimbing",
+      example: "uploads/dosen",
     }),
     user_id: z.number().int().openapi({
       example: 4,
@@ -121,7 +121,7 @@ export const pembimbingSchema = z
     created_at: timestampSchema,
     updated_at: timestampSchema,
   })
-  .openapi("Pembimbing");
+  .openapi("Dosen");
 
 export const instansiSchema = z
   .object({
@@ -184,7 +184,7 @@ export const kklKlpSchema = z
     instansi_id: z.number().int().openapi({
       example: 1,
     }),
-    pembimbing_id: z.number().int().openapi({
+    dosen_id: z.number().int().openapi({
       example: 1,
     }),
     created_at: timestampSchema,

@@ -91,11 +91,11 @@ export class KklKlpController {
     try {
       const body: CreateKklKlpRequestDto = await c.req.json();
 
-      if (!body.kkl_periode_id || !body.instansi_id || !body.pembimbing_id) {
+      if (!body.kkl_periode_id || !body.instansi_id || !body.dosen_id) {
         return c.json(
           {
             success: false,
-            message: "kkl_periode_id, instansi_id, and pembimbing_id are required",
+            message: "kkl_periode_id, instansi_id, and dosen_id are required",
           },
           400,
         );
@@ -108,7 +108,7 @@ export class KklKlpController {
           {
             success: false,
             message:
-              "KKL klp with same periode, instansi, and pembimbing already exists",
+              "KKL klp with same periode, instansi, and dosen already exists",
           },
           400,
         );

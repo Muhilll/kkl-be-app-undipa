@@ -19,7 +19,7 @@ export class KklKlpService {
     const existingKklKlp = await KklKlpReadRepository.getKklKlpByGroupKeys(
       payload.kkl_periode_id,
       payload.instansi_id,
-      payload.pembimbing_id,
+      payload.dosen_id,
     );
 
     if (existingKklKlp) {

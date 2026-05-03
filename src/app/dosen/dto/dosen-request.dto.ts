@@ -1,4 +1,4 @@
-export type CreatePembimbingRequestDto = {
+export type CreateDosenRequestDto = {
   nidn: string;
   password: string;
   nama: string;
@@ -9,7 +9,7 @@ export type CreatePembimbingRequestDto = {
   user_id: number;
 };
 
-export type UpdatePembimbingRequestDto = Partial<{
+export type UpdateDosenRequestDto = Partial<{
   nidn: string;
   password: string;
   nama: string;

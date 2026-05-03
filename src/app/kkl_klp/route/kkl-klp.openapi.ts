@@ -23,7 +23,7 @@ const createKklKlpRequestSchema = z
     instansi_id: z.coerce.number().int().openapi({
       example: 1,
     }),
-    pembimbing_id: z.coerce.number().int().openapi({
+    dosen_id: z.coerce.number().int().openapi({
       example: 1,
     }),
   })
@@ -33,7 +33,7 @@ const updateKklKlpRequestSchema = z
   .object({
     kkl_periode_id: createOptionalCoercedIntSchema(1),
     instansi_id: createOptionalCoercedIntSchema(1),
-    pembimbing_id: createOptionalCoercedIntSchema(1),
+    dosen_id: createOptionalCoercedIntSchema(1),
   })
   .openapi("UpdateKklKlpRequest");
 

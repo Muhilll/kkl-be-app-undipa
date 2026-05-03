@@ -1,18 +1,18 @@
 import { Context } from "hono";
 import {
-  CreatePembimbingRequestDto,
-  UpdatePembimbingRequestDto,
-} from "../dto/pembimbing-request.dto";
-import { PembimbingService } from "../service/pembimbing.service";
+  CreateDosenRequestDto,
+  UpdateDosenRequestDto,
+} from "../dto/dosen-request.dto";
+import { DosenService } from "../service/dosen.service";
 
-type ParsedPembimbingId =
+type ParsedDosenId =
   | { success: true; id: number }
   | { success: false; error: string };
 
-export class PembimbingController {
-  private static parsePembimbingIdParam(
+export class DosenController {
+  private static parseDosenIdParam(
     idParam: string | undefined,
-  ): ParsedPembimbingId {
+  ): ParsedDosenId {
     if (!idParam) {
       return {
         success: false,
@@ -25,7 +25,7 @@ export class PembimbingController {
     if (isNaN(id)) {
       return {
         success: false,
-        error: "Invalid pembimbing ID",
+        error: "Invalid dosen ID",
       };
     }
 
@@ -37,12 +37,12 @@ export class PembimbingController {
 
   static async getAll(c: Context) {
     try {
-      const pembimbings = await PembimbingService.getAllPembimbings();
+      const dosens = await DosenService.getAllDosens();
 
       return c.json({
         success: true,
-        data: pembimbings,
-        message: "Pembimbings fetched successfully",
+        data: dosens,
+        message: "Dosens fetched successfully",
       });
     } catch (error) {
       return c.json(
@@ -58,7 +58,7 @@ export class PembimbingController {
 
   static async getById(c: Context) {
     try {
-      const parsedId = PembimbingController.parsePembimbingIdParam(
+      const parsedId = DosenController.parseDosenIdParam(
         c.req.param("id"),
       );
 
@@ -66,16 +66,16 @@ export class PembimbingController {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const pembimbing = await PembimbingService.getPembimbingById(parsedId.id);
+      const dosen = await DosenService.getDosenById(parsedId.id);
 
-      if (!pembimbing) {
-        return c.json({ success: false, message: "Pembimbing not found" }, 404);
+      if (!dosen) {
+        return c.json({ success: false, message: "Dosen not found" }, 404);
       }
 
       return c.json({
         success: true,
-        data: pembimbing,
-        message: "Pembimbing fetched successfully",
+        data: dosen,
+        message: "Dosen fetched successfully",
       });
     } catch (error) {
       return c.json(
@@ -91,7 +91,7 @@ export class PembimbingController {
 
   static async create(c: Context) {
     try {
-      const body: CreatePembimbingRequestDto = await c.req.json();
+      const body: CreateDosenRequestDto = await c.req.json();
 
       if (
         !body.nidn ||
@@ -109,13 +109,13 @@ export class PembimbingController {
         );
       }
 
-      const createResult = await PembimbingService.createPembimbing(body);
+      const createResult = await DosenService.createDosen(body);
 
       if (createResult.conflict) {
         return c.json(
           {
             success: false,
-            message: "Pembimbing NIDN, email, or user_id already exists",
+            message: "Dosen NIDN, email, or user_id already exists",
           },
           400,
         );
@@ -125,7 +125,7 @@ export class PembimbingController {
         {
           success: true,
           data: createResult.result,
-          message: "Pembimbing created successfully",
+          message: "Dosen created successfully",
         },
         201,
       );
@@ -143,7 +143,7 @@ export class PembimbingController {
 
   static async update(c: Context) {
     try {
-      const parsedId = PembimbingController.parsePembimbingIdParam(
+      const parsedId = DosenController.parseDosenIdParam(
         c.req.param("id"),
       );
 
@@ -151,20 +151,20 @@ export class PembimbingController {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const body: UpdatePembimbingRequestDto = await c.req.json();
-      const updateResult = await PembimbingService.updatePembimbing(
+      const body: UpdateDosenRequestDto = await c.req.json();
+      const updateResult = await DosenService.updateDosen(
         parsedId.id,
         body,
       );
 
       if (!updateResult) {
-        return c.json({ success: false, message: "Pembimbing not found" }, 404);
+        return c.json({ success: false, message: "Dosen not found" }, 404);
       }
 
       return c.json({
         success: true,
         data: updateResult.result,
-        message: "Pembimbing updated successfully",
+        message: "Dosen updated successfully",
       });
     } catch (error) {
       return c.json(
@@ -180,7 +180,7 @@ export class PembimbingController {
 
   static async delete(c: Context) {
     try {
-      const parsedId = PembimbingController.parsePembimbingIdParam(
+      const parsedId = DosenController.parseDosenIdParam(
         c.req.param("id"),
       );
 
@@ -188,18 +188,18 @@ export class PembimbingController {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const deleteResult = await PembimbingService.deletePembimbing(
+      const deleteResult = await DosenService.deleteDosen(
         parsedId.id,
       );
 
       if (!deleteResult) {
-        return c.json({ success: false, message: "Pembimbing not found" }, 404);
+        return c.json({ success: false, message: "Dosen not found" }, 404);
       }
 
       return c.json({
         success: true,
         data: deleteResult.result,
-        message: "Pembimbing deleted successfully",
+        message: "Dosen deleted successfully",
       });
     } catch (error) {
       return c.json(

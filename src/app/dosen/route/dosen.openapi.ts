@@ -11,17 +11,17 @@ import {
   protectedSecurity,
   writeResultSchema,
 } from "../../../docs/openapi-common";
-import { pembimbingSchema } from "../../../docs/openapi-schemas";
+import { dosenSchema } from "../../../docs/openapi-schemas";
 
-const pembimbingIdParamsSchema = createNumericPathParamsSchema("id");
+const dosenIdParamsSchema = createNumericPathParamsSchema("id");
 
-const createPembimbingRequestSchema = z
+const createDosenRequestSchema = z
   .object({
     nidn: z.string().min(1).openapi({
       example: "0912345601",
     }),
     password: z.string().min(1).openapi({
-      example: "pembimbing123",
+      example: "dosen123",
     }),
     nama: z.string().min(1).openapi({
       example: "Dr. Andi Wijaya",
@@ -33,18 +33,18 @@ const createPembimbingRequestSchema = z
       example: "081234567890",
     }),
     foto: z.string().nullable().optional().openapi({
-      example: "https://res.cloudinary.com/demo/image/upload/pembimbing.jpg",
+      example: "https://res.cloudinary.com/demo/image/upload/dosen.jpg",
     }),
     image_public_id: z.string().nullable().optional().openapi({
-      example: "uploads/pembimbing",
+      example: "uploads/dosen",
     }),
     user_id: z.coerce.number().int().openapi({
       example: 4,
     }),
   })
-  .openapi("CreatePembimbingRequest");
+  .openapi("CreateDosenRequest");
 
-const updatePembimbingRequestSchema = z
+const updateDosenRequestSchema = z
   .object({
     nidn: z.string().min(1).optional().openapi({
       example: "0912345602",
@@ -62,38 +62,38 @@ const updatePembimbingRequestSchema = z
       example: "081234567891",
     }),
     foto: z.string().nullable().optional().openapi({
-      example: "https://res.cloudinary.com/demo/image/upload/pembimbing-update.jpg",
+      example: "https://res.cloudinary.com/demo/image/upload/dosen-update.jpg",
     }),
     image_public_id: z.string().nullable().optional().openapi({
-      example: "uploads/pembimbing-update",
+      example: "uploads/dosen-update",
     }),
     user_id: createOptionalCoercedIntSchema(4),
   })
-  .openapi("UpdatePembimbingRequest");
+  .openapi("UpdateDosenRequest");
 
-const pembimbingListResponseSchema = createSuccessEnvelopeSchema(
-  "PembimbingListResponse",
-  z.array(pembimbingSchema),
-  "Pembimbings fetched successfully",
+const dosenListResponseSchema = createSuccessEnvelopeSchema(
+  "DosenListResponse",
+  z.array(dosenSchema),
+  "Dosens fetched successfully",
 );
 
-const pembimbingDetailResponseSchema = createSuccessEnvelopeSchema(
-  "PembimbingDetailResponse",
-  pembimbingSchema,
-  "Pembimbing fetched successfully",
+const dosenDetailResponseSchema = createSuccessEnvelopeSchema(
+  "DosenDetailResponse",
+  dosenSchema,
+  "Dosen fetched successfully",
 );
 
-const pembimbingMutationResponseSchema = createSuccessEnvelopeSchema(
-  "PembimbingMutationResponse",
+const dosenMutationResponseSchema = createSuccessEnvelopeSchema(
+  "DosenMutationResponse",
   writeResultSchema,
-  "Pembimbing created successfully",
+  "Dosen created successfully",
 );
 
-export const getAllPembimbingsRoute = createRoute({
+export const getAllDosensRoute = createRoute({
   method: "get",
   path: "/",
-  tags: ["Pembimbings"],
-  summary: "Get all pembimbings",
+  tags: ["Dosens"],
+  summary: "Get all dosens",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -102,8 +102,8 @@ export const getAllPembimbingsRoute = createRoute({
   ] as const,
   responses: {
     200: jsonResponse(
-      pembimbingListResponseSchema,
-      "Pembimbings fetched successfully",
+      dosenListResponseSchema,
+      "Dosens fetched successfully",
     ),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
@@ -111,11 +111,11 @@ export const getAllPembimbingsRoute = createRoute({
   },
 });
 
-export const getPembimbingByIdRoute = createRoute({
+export const getDosenByIdRoute = createRoute({
   method: "get",
   path: "/{id}",
-  tags: ["Pembimbings"],
-  summary: "Get pembimbing by id",
+  tags: ["Dosens"],
+  summary: "Get dosen by id",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -123,26 +123,26 @@ export const getPembimbingByIdRoute = createRoute({
     requirePermission(),
   ] as const,
   request: {
-    params: pembimbingIdParamsSchema,
+    params: dosenIdParamsSchema,
   },
   responses: {
     200: jsonResponse(
-      pembimbingDetailResponseSchema,
-      "Pembimbing fetched successfully",
+      dosenDetailResponseSchema,
+      "Dosen fetched successfully",
     ),
-    400: jsonResponse(apiErrorResponseSchema, "Invalid pembimbing id"),
+    400: jsonResponse(apiErrorResponseSchema, "Invalid dosen id"),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
-    404: jsonResponse(apiErrorResponseSchema, "Pembimbing not found"),
+    404: jsonResponse(apiErrorResponseSchema, "Dosen not found"),
     500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
   },
 });
 
-export const createPembimbingRoute = createRoute({
+export const createDosenRoute = createRoute({
   method: "post",
   path: "/",
-  tags: ["Pembimbings"],
-  summary: "Create pembimbing",
+  tags: ["Dosens"],
+  summary: "Create dosen",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -154,15 +154,15 @@ export const createPembimbingRoute = createRoute({
       required: true,
       content: {
         "application/json": {
-          schema: createPembimbingRequestSchema,
+          schema: createDosenRequestSchema,
         },
       },
     },
   },
   responses: {
     201: jsonResponse(
-      pembimbingMutationResponseSchema,
-      "Pembimbing created successfully",
+      dosenMutationResponseSchema,
+      "Dosen created successfully",
     ),
     400: jsonResponse(apiErrorResponseSchema, "Validation error"),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
@@ -171,11 +171,11 @@ export const createPembimbingRoute = createRoute({
   },
 });
 
-export const updatePembimbingRoute = createRoute({
+export const updateDosenRoute = createRoute({
   method: "put",
   path: "/{id}",
-  tags: ["Pembimbings"],
-  summary: "Update pembimbing",
+  tags: ["Dosens"],
+  summary: "Update dosen",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -183,34 +183,34 @@ export const updatePembimbingRoute = createRoute({
     requirePermission(),
   ] as const,
   request: {
-    params: pembimbingIdParamsSchema,
+    params: dosenIdParamsSchema,
     body: {
       required: true,
       content: {
         "application/json": {
-          schema: updatePembimbingRequestSchema,
+          schema: updateDosenRequestSchema,
         },
       },
     },
   },
   responses: {
     200: jsonResponse(
-      pembimbingMutationResponseSchema,
-      "Pembimbing updated successfully",
+      dosenMutationResponseSchema,
+      "Dosen updated successfully",
     ),
     400: jsonResponse(apiErrorResponseSchema, "Validation error"),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
-    404: jsonResponse(apiErrorResponseSchema, "Pembimbing not found"),
+    404: jsonResponse(apiErrorResponseSchema, "Dosen not found"),
     500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
   },
 });
 
-export const deletePembimbingRoute = createRoute({
+export const deleteDosenRoute = createRoute({
   method: "delete",
   path: "/{id}",
-  tags: ["Pembimbings"],
-  summary: "Delete pembimbing",
+  tags: ["Dosens"],
+  summary: "Delete dosen",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -218,17 +218,17 @@ export const deletePembimbingRoute = createRoute({
     requirePermission(),
   ] as const,
   request: {
-    params: pembimbingIdParamsSchema,
+    params: dosenIdParamsSchema,
   },
   responses: {
     200: jsonResponse(
-      pembimbingMutationResponseSchema,
-      "Pembimbing deleted successfully",
+      dosenMutationResponseSchema,
+      "Dosen deleted successfully",
     ),
-    400: jsonResponse(apiErrorResponseSchema, "Invalid pembimbing id"),
+    400: jsonResponse(apiErrorResponseSchema, "Invalid dosen id"),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
-    404: jsonResponse(apiErrorResponseSchema, "Pembimbing not found"),
+    404: jsonResponse(apiErrorResponseSchema, "Dosen not found"),
     500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
   },
 });

@@ -28,7 +28,7 @@ export class KklKlpReadRepository {
   static async getKklKlpByGroupKeys(
     kklPeriodeId: number,
     instansiId: number,
-    pembimbingId: number,
+    dosenId: number,
   ) {
     try {
       const result = await db
@@ -38,7 +38,7 @@ export class KklKlpReadRepository {
           and(
             eq(kkl_klps.kkl_periode_id, kklPeriodeId),
             eq(kkl_klps.instansi_id, instansiId),
-            eq(kkl_klps.pembimbing_id, pembimbingId),
+            eq(kkl_klps.dosen_id, dosenId),
           ),
         )
         .limit(1);

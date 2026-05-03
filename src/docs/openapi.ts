@@ -1,7 +1,7 @@
 import { getMenuOpenApiDocument } from "../app/menu/route/menu.route";
 import { getJurusanOpenApiDocument } from "../app/jurusan/route/jurusan.route";
 import { getMahasiswaOpenApiDocument } from "../app/mahasiswa/route/mahasiswa.route";
-import { getPembimbingOpenApiDocument } from "../app/pembimbing/route/pembimbing.route";
+import { getDosenOpenApiDocument } from "../app/dosen/route/dosen.route";
 import { getInstansiOpenApiDocument } from "../app/instansi/route/instansi.route";
 import { getKklPeriodeOpenApiDocument } from "../app/kkl_periode/route/kkl-periode.route";
 import { getKklKlpOpenApiDocument } from "../app/kkl_klp/route/kkl-klp.route";
@@ -45,7 +45,7 @@ function mergeTagDefinitions(
     });
   }
 
-  return [...mergedTags.values()];
+  return Array.from(mergedTags.values());
 }
 
 function mergeOpenApiDocument(
@@ -138,7 +138,7 @@ function createBaseDocument(baseUrl: string): OpenApiDocument {
       { name: "Roles", description: "Role master data" },
       { name: "Jurusans", description: "Jurusan master data" },
       { name: "Mahasiswas", description: "Mahasiswa master data" },
-      { name: "Pembimbings", description: "Pembimbing master data" },
+      { name: "Dosens", description: "Dosen master data" },
       { name: "Instansis", description: "Instansi master data" },
       { name: "KKL Periodes", description: "KKL periode master data" },
       { name: "KKL Klps", description: "KKL kelompok data" },
@@ -263,8 +263,8 @@ export function createOpenApiDocument(baseUrl: string) {
       "/api/mahasiswas",
     ),
     mountOpenApiPaths(
-      getPembimbingOpenApiDocument(baseUrl),
-      "/api/pembimbings",
+      getDosenOpenApiDocument(baseUrl),
+      "/api/dosens",
     ),
     mountOpenApiPaths(getInstansiOpenApiDocument(baseUrl), "/api/instansis"),
     mountOpenApiPaths(
