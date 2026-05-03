@@ -17,6 +17,9 @@ const kklKlpIdParamsSchema = createNumericPathParamsSchema("id");
 
 const createKklKlpRequestSchema = z
   .object({
+    nama: z.string().min(1).openapi({
+      example: "Kelompok 1",
+    }),
     kkl_periode_id: z.coerce.number().int().openapi({
       example: 1,
     }),
@@ -31,6 +34,9 @@ const createKklKlpRequestSchema = z
 
 const updateKklKlpRequestSchema = z
   .object({
+    nama: z.string().min(1).optional().openapi({
+      example: "Kelompok 1 Update",
+    }),
     kkl_periode_id: createOptionalCoercedIntSchema(1),
     instansi_id: createOptionalCoercedIntSchema(1),
     dosen_id: createOptionalCoercedIntSchema(1),

@@ -16,6 +16,11 @@ export class KklKlpService {
   }
 
   static async createKklKlp(payload: CreateKklKlpRequestDto) {
+    const existingDosenGroup = await KklKlpReadRepository.getKklKlpByDosenId(payload.dosen_id);
+    if (existingDosenGroup) {
+      return { conflict: true as const, message: "Dosen sudah ditugaskan ke kelompok lain." };
+    }
+
     const existingKklKlp = await KklKlpReadRepository.getKklKlpByGroupKeys(
       payload.kkl_periode_id,
       payload.instansi_id,
@@ -23,7 +28,7 @@ export class KklKlpService {
     );
 
     if (existingKklKlp) {
-      return { conflict: true as const };
+      return { conflict: true as const, message: "Kelompok KKL dengan konfigurasi ini sudah ada." };
     }
 
     const result = await KklKlpWriteRepository.createKklKlp(payload);
@@ -35,6 +40,13 @@ export class KklKlpService {
 
     if (!kklKlp) {
       return null;
+    }
+
+    if (payload.dosen_id) {
+      const existingDosenGroup = await KklKlpReadRepository.getKklKlpByDosenId(payload.dosen_id);
+      if (existingDosenGroup && existingDosenGroup.id !== id) {
+        return { conflict: true as const, message: "Dosen sudah ditugaskan ke kelompok lain." };
+      }
     }
 
     const result = await KklKlpWriteRepository.updateKklKlp(id, payload);

@@ -89,6 +89,14 @@ export const mahasiswaSchema = z
     }),
     created_at: timestampSchema,
     updated_at: timestampSchema,
+    jurusan: z
+      .object({
+        kode: z.string().openapi({ example: "TI" }),
+        nama: z.string().openapi({ example: "Teknik Informatika" }),
+      })
+      .nullable()
+      .optional()
+      .openapi("MahasiswaJurusanSummary"),
   })
   .openapi("Mahasiswa");
 
@@ -200,6 +208,9 @@ export const kklKlpSchema = z
     id: z.number().int().openapi({
       example: 1,
     }),
+    nama: z.string().openapi({
+      example: "Kelompok 1",
+    }),
     kkl_periode_id: z.number().int().openapi({
       example: 1,
     }),
@@ -211,6 +222,33 @@ export const kklKlpSchema = z
     }),
     created_at: timestampSchema,
     updated_at: timestampSchema,
+    kkl_periode: z
+      .object({
+        id: z.number().int().openapi({ example: 1 }),
+        nama: z.string().openapi({ example: "KKL 2026 Ganjil" }),
+        tahun: z.string().openapi({ example: "2026" }),
+        semester: z.string().openapi({ example: "ganjil" }),
+      })
+      .nullable()
+      .optional()
+      .openapi("KklKlpPeriodeSummary"),
+    instansi: z
+      .object({
+        id: z.number().int().openapi({ example: 1 }),
+        nama: z.string().openapi({ example: "PT Teknologi Nusantara" }),
+      })
+      .nullable()
+      .optional()
+      .openapi("KklKlpInstansiSummary"),
+    dosen: z
+      .object({
+        id: z.number().int().openapi({ example: 1 }),
+        nama: z.string().openapi({ example: "Dr. Andi Wijaya" }),
+        nidn: z.string().openapi({ example: "0912345601" }),
+      })
+      .nullable()
+      .optional()
+      .openapi("KklKlpDosenSummary"),
   })
   .openapi("KklKlp");
 
@@ -227,8 +265,79 @@ export const kklAgtSchema = z
     }),
     created_at: timestampSchema,
     updated_at: timestampSchema,
+    mahasiswa: z
+      .object({
+        id: z.number().int().openapi({ example: 1 }),
+        nama: z.string().openapi({ example: "Budi Santoso" }),
+        nim: z.string().openapi({ example: "20260001" }),
+      })
+      .nullable()
+      .optional()
+      .openapi("KklAgtMahasiswaSummary"),
+    kkl_klp: z
+      .object({
+        id: z.number().int().openapi({ example: 1 }),
+        nama: z.string().openapi({ example: "Kelompok 1" }),
+        kkl_periode: z
+          .object({
+            id: z.number().int().openapi({ example: 1 }),
+            nama: z.string().openapi({ example: "KKL 2026 Ganjil" }),
+            tahun: z.string().openapi({ example: "2026" }),
+            semester: z.string().openapi({ example: "ganjil" }),
+          })
+          .nullable()
+          .optional()
+          .openapi("KklAgtKlpPeriodeSummary"),
+        instansi: z
+          .object({
+            id: z.number().int().openapi({ example: 1 }),
+            nama: z.string().openapi({ example: "PT Teknologi Nusantara" }),
+            latitude: z.string().nullable().openapi({ example: "-5.14766500" }),
+            longitude: z.string().nullable().openapi({ example: "119.43273200" }),
+          })
+          .nullable()
+          .optional()
+          .openapi("KklAgtKlpInstansiSummary"),
+        dosen: z
+          .object({
+            id: z.number().int().openapi({ example: 1 }),
+            nama: z.string().openapi({ example: "Dr. Andi Wijaya" }),
+          })
+          .nullable()
+          .optional()
+          .openapi("KklAgtKlpDosenSummary"),
+      })
+      .nullable()
+      .optional()
+      .openapi("KklAgtKlpSummary"),
   })
   .openapi("KklAgt");
+
+export const laporanSchema = z
+  .object({
+    id: z.number().int().openapi({ example: 1 }),
+    kkl_agt_id: z.number().int().openapi({ example: 1 }),
+    tanggal: z.string().openapi({ example: "2026-05-01" }),
+    jam: z.string().openapi({ example: "08:00:00" }),
+    aktifitas: z.string().openapi({ example: "Kegiatan observasi lapangan" }),
+    file: z.string().nullable().openapi({ example: null }),
+    latitude: z.string().nullable().openapi({ example: "-5.14766500" }),
+    longitude: z.string().nullable().openapi({ example: "119.43273200" }),
+    jarak: z.string().nullable().openapi({ example: "0.50" }),
+    status: z.enum(["valid", "invalid"]).openapi({ example: "valid" }),
+    created_at: timestampSchema,
+    updated_at: timestampSchema,
+    mahasiswa: z
+      .object({
+        id: z.number().int().openapi({ example: 1 }),
+        nama: z.string().openapi({ example: "Budi Santoso" }),
+        nim: z.string().openapi({ example: "20260001" }),
+      })
+      .nullable()
+      .optional()
+      .openapi("LaporanMahasiswaSummary"),
+  })
+  .openapi("Laporan");
 
 export const penilaianSchema = z
   .object({

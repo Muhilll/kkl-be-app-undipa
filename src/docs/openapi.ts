@@ -8,6 +8,7 @@ import { getKklPeriodeOpenApiDocument } from "../app/kkl_periode/route/kkl-perio
 import { getKklKlpOpenApiDocument } from "../app/kkl_klp/route/kkl-klp.route";
 import { getKklAgtOpenApiDocument } from "../app/kkl_agt/route/kkl-agt.route";
 import { getPenilaianOpenApiDocument } from "../app/penilaian/route/penilaian.route";
+import { getLaporanOpenApiDocument } from "../app/laporan/route/laporan.route";
 import { getRoleOpenApiDocument } from "../app/role/route/role.route";
 import { getRolePermissionOpenApiDocument } from "../app/role_permission/route/role-permission.route";
 import { getUploadOpenApiDocument } from "../app/upload/route/upload.route";
@@ -147,6 +148,7 @@ function createBaseDocument(baseUrl: string): OpenApiDocument {
       { name: "KKL Klps", description: "KKL kelompok data" },
       { name: "KKL Agts", description: "KKL anggota data" },
       { name: "Penilaians", description: "Penilaian data" },
+      { name: "Laporans", description: "Laporan KKL data" },
       { name: "Menus", description: "Navigation menu management" },
       {
         name: "Role Permissions",
@@ -279,6 +281,7 @@ export function createOpenApiDocument(baseUrl: string) {
     mountOpenApiPaths(getKklKlpOpenApiDocument(baseUrl), "/api/kkl-klps"),
     mountOpenApiPaths(getKklAgtOpenApiDocument(baseUrl), "/api/kkl-agts"),
     mountOpenApiPaths(getPenilaianOpenApiDocument(baseUrl), "/api/penilaians"),
+    mountOpenApiPaths(getLaporanOpenApiDocument(baseUrl), "/api/laporans"),
     mountOpenApiPaths(getMenuOpenApiDocument(baseUrl), "/api/menus"),
     mountOpenApiPaths(
       getRolePermissionOpenApiDocument(baseUrl),

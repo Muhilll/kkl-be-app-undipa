@@ -85,7 +85,7 @@ export function createSignedUploadParams(target?: string): CloudinarySignedUploa
     folder,
     signature,
     timestamp,
-    uploadUrl: `https://api.cloudinary.com/v1_1/${config.cloud_name}/image/upload`,
+    uploadUrl: `https://api.cloudinary.com/v1_1/${config.cloud_name}/auto/upload`,
   };
 }
 

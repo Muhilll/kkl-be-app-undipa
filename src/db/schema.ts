@@ -180,6 +180,7 @@ export const kkl_klps = mysqlTable(
   "kkl_klps",
   {
     id: int().primaryKey().autoincrement(),
+    nama: varchar({ length: 100 }).notNull(),
     kkl_periode_id: int().notNull(),
     instansi_id: int().notNull(),
     dosen_id: int().notNull(),

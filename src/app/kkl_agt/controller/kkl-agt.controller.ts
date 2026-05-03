@@ -107,7 +107,7 @@ export class KklAgtController {
         return c.json(
           {
             success: false,
-            message: "Mahasiswa already exists in this KKL klp",
+            message: createResult.message || "Mahasiswa already exists in this KKL klp",
           },
           400,
         );
@@ -146,6 +146,16 @@ export class KklAgtController {
 
       if (!updateResult) {
         return c.json({ success: false, message: "KKL agt not found" }, 404);
+      }
+
+      if ('conflict' in updateResult && updateResult.conflict) {
+        return c.json(
+          {
+            success: false,
+            message: updateResult.message || "Conflict occurred",
+          },
+          400,
+        );
       }
 
       return c.json({

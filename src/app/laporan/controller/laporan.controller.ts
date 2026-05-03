@@ -1,18 +1,18 @@
 import { Context } from "hono";
 import {
-  CreateKklKlpRequestDto,
-  UpdateKklKlpRequestDto,
-} from "../dto/kkl-klp-request.dto";
-import { KklKlpService } from "../service/kkl-klp.service";
+  CreateLaporanRequestDto,
+  UpdateLaporanRequestDto,
+} from "../dto/laporan-request.dto";
+import { LaporanService } from "../service/laporan.service";
 
-type ParsedKklKlpId =
+type ParsedLaporanId =
   | { success: true; id: number }
   | { success: false; error: string };
 
-export class KklKlpController {
-  private static parseKklKlpIdParam(
+export class LaporanController {
+  private static parseLaporanIdParam(
     idParam: string | undefined,
-  ): ParsedKklKlpId {
+  ): ParsedLaporanId {
     if (!idParam) {
       return {
         success: false,
@@ -25,7 +25,7 @@ export class KklKlpController {
     if (isNaN(id)) {
       return {
         success: false,
-        error: "Invalid kkl klp ID",
+        error: "Invalid laporan ID",
       };
     }
 
@@ -37,12 +37,12 @@ export class KklKlpController {
 
   static async getAll(c: Context) {
     try {
-      const kklKlps = await KklKlpService.getAllKklKlps();
+      const laporans = await LaporanService.getAllLaporans();
 
       return c.json({
         success: true,
-        data: kklKlps,
-        message: "KKL klps fetched successfully",
+        data: laporans,
+        message: "Laporans fetched successfully",
       });
     } catch (error) {
       return c.json(
@@ -58,22 +58,22 @@ export class KklKlpController {
 
   static async getById(c: Context) {
     try {
-      const parsedId = KklKlpController.parseKklKlpIdParam(c.req.param("id"));
+      const parsedId = LaporanController.parseLaporanIdParam(c.req.param("id"));
 
       if (parsedId.success === false) {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const kklKlp = await KklKlpService.getKklKlpById(parsedId.id);
+      const laporan = await LaporanService.getLaporanById(parsedId.id);
 
-      if (!kklKlp) {
-        return c.json({ success: false, message: "KKL klp not found" }, 404);
+      if (!laporan) {
+        return c.json({ success: false, message: "Laporan not found" }, 404);
       }
 
       return c.json({
         success: true,
-        data: kklKlp,
-        message: "KKL klp fetched successfully",
+        data: laporan,
+        message: "Laporan fetched successfully",
       });
     } catch (error) {
       return c.json(
@@ -89,36 +89,25 @@ export class KklKlpController {
 
   static async create(c: Context) {
     try {
-      const body: CreateKklKlpRequestDto = await c.req.json();
+      const body: CreateLaporanRequestDto = await c.req.json();
 
-      if (!body.kkl_periode_id || !body.instansi_id || !body.dosen_id) {
+      if (!body.kkl_agt_id || !body.tanggal || !body.jam || !body.aktifitas || !body.status) {
         return c.json(
           {
             success: false,
-            message: "kkl_periode_id, instansi_id, and dosen_id are required",
+            message: "kkl_agt_id, tanggal, jam, aktifitas, and status are required",
           },
           400,
         );
       }
 
-      const createResult = await KklKlpService.createKklKlp(body);
-
-      if (createResult.conflict) {
-        return c.json(
-          {
-            success: false,
-            message:
-              createResult.message || "KKL klp with same periode, instansi, and dosen already exists",
-          },
-          400,
-        );
-      }
+      const createResult = await LaporanService.createLaporan(body);
 
       return c.json(
         {
           success: true,
           data: createResult.result,
-          message: "KKL klp created successfully",
+          message: "Laporan created successfully",
         },
         201,
       );
@@ -136,33 +125,23 @@ export class KklKlpController {
 
   static async update(c: Context) {
     try {
-      const parsedId = KklKlpController.parseKklKlpIdParam(c.req.param("id"));
+      const parsedId = LaporanController.parseLaporanIdParam(c.req.param("id"));
 
       if (parsedId.success === false) {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const body: UpdateKklKlpRequestDto = await c.req.json();
-      const updateResult = await KklKlpService.updateKklKlp(parsedId.id, body);
+      const body: UpdateLaporanRequestDto = await c.req.json();
+      const updateResult = await LaporanService.updateLaporan(parsedId.id, body);
 
       if (!updateResult) {
-        return c.json({ success: false, message: "KKL klp not found" }, 404);
-      }
-
-      if ('conflict' in updateResult && updateResult.conflict) {
-        return c.json(
-          {
-            success: false,
-            message: updateResult.message || "Conflict occurred",
-          },
-          400,
-        );
+        return c.json({ success: false, message: "Laporan not found" }, 404);
       }
 
       return c.json({
         success: true,
         data: updateResult.result,
-        message: "KKL klp updated successfully",
+        message: "Laporan updated successfully",
       });
     } catch (error) {
       return c.json(
@@ -178,22 +157,22 @@ export class KklKlpController {
 
   static async delete(c: Context) {
     try {
-      const parsedId = KklKlpController.parseKklKlpIdParam(c.req.param("id"));
+      const parsedId = LaporanController.parseLaporanIdParam(c.req.param("id"));
 
       if (parsedId.success === false) {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const deleteResult = await KklKlpService.deleteKklKlp(parsedId.id);
+      const deleteResult = await LaporanService.deleteLaporan(parsedId.id);
 
       if (!deleteResult) {
-        return c.json({ success: false, message: "KKL klp not found" }, 404);
+        return c.json({ success: false, message: "Laporan not found" }, 404);
       }
 
       return c.json({
         success: true,
         data: deleteResult.result,
-        message: "KKL klp deleted successfully",
+        message: "Laporan deleted successfully",
       });
     } catch (error) {
       return c.json(
