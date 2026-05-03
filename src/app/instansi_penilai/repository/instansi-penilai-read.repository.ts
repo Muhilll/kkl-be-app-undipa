@@ -52,4 +52,18 @@ export class InstansiPenilaiReadRepository {
       throw new Error(`Failed to fetch instansi penilai: ${error}`);
     }
   }
+
+  static async getInstansiPenilaiByKlpId(kkl_klp_id: number) {
+    try {
+      const result = await db
+        .select(instansiPenilaiSelect)
+        .from(instansi_penilais)
+        .where(eq(instansi_penilais.kkl_klp_id, kkl_klp_id))
+        .limit(1);
+
+      return result[0] || null;
+    } catch (error) {
+      throw new Error(`Failed to fetch instansi penilai by klp id: ${error}`);
+    }
+  }
 }

@@ -4,6 +4,7 @@ import {
 } from "../dto/kkl-agt-request.dto";
 import { KklAgtReadRepository } from "../repository/kkl-agt-read.repository";
 import { KklAgtWriteRepository } from "../repository/kkl-agt-write.repository";
+import { KklKlpReadRepository } from "../../kkl_klp/repository/kkl-klp-read.repository";
 
 export class KklAgtService {
   static async getAllKklAgts() {
@@ -15,9 +16,14 @@ export class KklAgtService {
   }
 
   static async createKklAgt(payload: CreateKklAgtRequestDto) {
-    const existingMahasiswa = await KklAgtReadRepository.getKklAgtByMahasiswaId(payload.mahasiswa_id);
+    const targetKlp = await KklKlpReadRepository.getKklKlpById(payload.kkl_klp_id);
+    if (!targetKlp) {
+      return { conflict: true as const, message: "Kelompok KKL tidak ditemukan." };
+    }
+
+    const existingMahasiswa = await KklAgtReadRepository.getKklAgtByMahasiswaAndPeriode(payload.mahasiswa_id, targetKlp.kkl_periode_id);
     if (existingMahasiswa) {
-      return { conflict: true as const, message: "Mahasiswa sudah terdaftar di kelompok lain." };
+      return { conflict: true as const, message: "Mahasiswa sudah terdaftar di kelompok lain pada periode ini." };
     }
 
     const existingKklAgt =
@@ -41,10 +47,16 @@ export class KklAgtService {
       return null;
     }
 
-    if (payload.mahasiswa_id) {
-      const existingMahasiswa = await KklAgtReadRepository.getKklAgtByMahasiswaId(payload.mahasiswa_id);
-      if (existingMahasiswa && existingMahasiswa.id !== id) {
-        return { conflict: true as const, message: "Mahasiswa sudah terdaftar di kelompok lain." };
+    if (payload.mahasiswa_id || payload.kkl_klp_id) {
+      const targetKlpId = payload.kkl_klp_id || kklAgt.kkl_klp_id;
+      const targetMhsId = payload.mahasiswa_id || kklAgt.mahasiswa_id;
+      
+      const targetKlp = await KklKlpReadRepository.getKklKlpById(targetKlpId);
+      if (targetKlp) {
+        const existingMahasiswa = await KklAgtReadRepository.getKklAgtByMahasiswaAndPeriode(targetMhsId, targetKlp.kkl_periode_id);
+        if (existingMahasiswa && existingMahasiswa.id !== id) {
+          return { conflict: true as const, message: "Mahasiswa sudah terdaftar di kelompok lain pada periode ini." };
+        }
       }
     }
 

@@ -125,4 +125,23 @@ export class KklKlpReadRepository {
       throw new Error(`Failed to fetch kkl klp by dosen: ${error}`);
     }
   }
+
+  static async getKklKlpByDosenAndPeriode(dosenId: number, periodeId: number) {
+    try {
+      const result = await db
+        .select()
+        .from(kkl_klps)
+        .where(
+          and(
+            eq(kkl_klps.dosen_id, dosenId),
+            eq(kkl_klps.kkl_periode_id, periodeId)
+          )
+        )
+        .limit(1);
+
+      return result[0] || null;
+    } catch (error) {
+      throw new Error(`Failed to fetch kkl klp by dosen and periode: ${error}`);
+    }
+  }
 }

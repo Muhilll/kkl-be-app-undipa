@@ -114,4 +114,23 @@ export class KklAgtReadRepository {
       throw new Error(`Failed to fetch kkl agt by mahasiswa: ${error}`);
     }
   }
+
+  static async getKklAgtByMahasiswaAndPeriode(mahasiswaId: number, periodeId: number) {
+    try {
+      const rows = await agtJoins(
+        db.select(selectAgtFields()).from(kkl_agts)
+      )
+        .where(
+          and(
+            eq(kkl_agts.mahasiswa_id, mahasiswaId),
+            eq(kkl_klps.kkl_periode_id, periodeId)
+          )
+        )
+        .limit(1);
+
+      return rows[0] ? mapAgtRow(rows[0]) : null;
+    } catch (error) {
+      throw new Error(`Failed to fetch kkl agt by mahasiswa and periode: ${error}`);
+    }
+  }
 }

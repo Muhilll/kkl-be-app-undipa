@@ -25,7 +25,15 @@ export class InstansiPenilaiService {
       );
 
     if (existingInstansiPenilai) {
-      return { conflict: true as const };
+      return { conflict: true as const, reason: "virtual_account" };
+    }
+
+    const existingKlp = await InstansiPenilaiReadRepository.getInstansiPenilaiByKlpId(
+      payload.kkl_klp_id,
+    );
+
+    if (existingKlp) {
+      return { conflict: true as const, reason: "kkl_klp_id" };
     }
 
     const hashedPassword = await hash(payload.password, 10);
@@ -48,6 +56,16 @@ export class InstansiPenilaiService {
     }
 
     const updateData = { ...payload };
+
+    if (payload.kkl_klp_id && payload.kkl_klp_id !== instansiPenilai.kkl_klp_id) {
+      const existingKlp = await InstansiPenilaiReadRepository.getInstansiPenilaiByKlpId(
+        payload.kkl_klp_id,
+      );
+
+      if (existingKlp) {
+        return { conflict: true as const, reason: "kkl_klp_id" };
+      }
+    }
 
     if (payload.password) {
       updateData.password = await hash(payload.password, 10);

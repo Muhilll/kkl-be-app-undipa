@@ -111,11 +111,13 @@ export class InstansiPenilaiController {
 
       const createResult = await InstansiPenilaiService.createInstansiPenilai(body);
 
-      if (createResult.conflict) {
+      if ("conflict" in createResult && createResult.conflict) {
         return c.json(
           {
             success: false,
-            message: "Instansi Penilai virtual_account already exists",
+            message: createResult.reason === "kkl_klp_id" 
+              ? "Kelompok KKL ini sudah memiliki akun Instansi Penilai"
+              : "Instansi Penilai virtual_account already exists",
           },
           400,
         );
@@ -159,6 +161,16 @@ export class InstansiPenilaiController {
 
       if (!updateResult) {
         return c.json({ success: false, message: "Instansi Penilai not found" }, 404);
+      }
+
+      if ("conflict" in updateResult && updateResult.conflict) {
+        return c.json(
+          {
+            success: false,
+            message: "Kelompok KKL ini sudah memiliki akun Instansi Penilai",
+          },
+          400,
+        );
       }
 
       return c.json({
