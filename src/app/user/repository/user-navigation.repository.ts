@@ -9,7 +9,7 @@ import {
 type NavigationMenuRow = {
   id: number;
   name: string;
-  path: string;
+  path: string | null;
   icon: string | null;
   parent_id: number | null;
 };
@@ -116,14 +116,14 @@ function buildNavigationTree(
   const treeMap = new Map<number, NavigationItem>();
   const roots: NavigationItem[] = [];
 
-  for (const item of navigationMap.values()) {
+  for (const item of Array.from(navigationMap.values())) {
     treeMap.set(item.id, {
       ...item,
       children: [],
     });
   }
 
-  for (const item of treeMap.values()) {
+  for (const item of Array.from(treeMap.values())) {
     if (item.parent_id !== null) {
       const parent = treeMap.get(item.parent_id);
 

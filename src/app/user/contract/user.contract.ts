@@ -9,7 +9,7 @@ export type NavigationPermission = {
 export type NavigationItem = {
   id: number;
   name: string;
-  path: string;
+  path: string | null;
   icon: string | null;
   parent_id: number | null;
   permissions: NavigationPermission;

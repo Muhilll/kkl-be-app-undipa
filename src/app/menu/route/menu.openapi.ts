@@ -20,7 +20,7 @@ const createMenuRequestSchema = z
     name: z.string().min(1).openapi({
       example: "Reports",
     }),
-    path: z.string().min(1).openapi({
+    path: z.string().nullable().optional().openapi({
       example: "/reports",
     }),
     permission_path: z.string().nullable().optional().openapi({
@@ -38,7 +38,7 @@ const updateMenuRequestSchema = z
     name: z.string().min(1).optional().openapi({
       example: "Report Detail",
     }),
-    path: z.string().min(1).optional().openapi({
+    path: z.string().nullable().optional().openapi({
       example: "/reports/detail",
     }),
     permission_path: z.string().nullable().optional().openapi({

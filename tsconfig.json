@@ -3,6 +3,9 @@
     "strict": true,
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
-    "types": ["bun", "node"]
+    "types": ["bun", "node"],
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler"
   }
 }

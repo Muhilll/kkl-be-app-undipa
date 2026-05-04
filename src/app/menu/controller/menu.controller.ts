@@ -89,11 +89,11 @@ export class MenuController {
     try {
       const body: CreateMenuRequestDto = await c.req.json();
 
-      if (!body.name || !body.path) {
+      if (!body.name) {
         return c.json(
           {
             success: false,
-            message: "Name and path are required",
+            message: "Name is required",
           },
           400,
         );

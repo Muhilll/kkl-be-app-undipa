@@ -25,7 +25,7 @@ export const menuSchema = z
     name: z.string().openapi({
       example: "Dashboard",
     }),
-    path: z.string().openapi({
+    path: z.string().nullable().openapi({
       example: "/dashboard",
     }),
     permission_path: z.string().nullable().openapi({
@@ -432,7 +432,7 @@ export const navigationItemSchema: z.ZodTypeAny = z
     name: z.string().openapi({
       example: "Master Data",
     }),
-    path: z.string().openapi({
+    path: z.string().nullable().openapi({
       example: "/master-data",
     }),
     icon: z.string().nullable().openapi({
@@ -482,7 +482,7 @@ export const rolePermissionSchema = z
       name: z.string().openapi({
         example: "Master Data",
       }),
-      path: z.string().openapi({
+      path: z.string().nullable().openapi({
         example: "/master-data",
       }),
       permission_path: z.string().nullable().openapi({
