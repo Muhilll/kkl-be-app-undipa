@@ -31,7 +31,9 @@ const createKklPeriodeRequestSchema = z
       example: 5,
     }),
     is_active: z.boolean().optional().openapi({
-      example: true,
+      example: false,
+      description:
+        "Defaults to false. When true, backend deactivates all other KKL periodes so only this periode is active.",
     }),
   })
   .openapi("CreateKklPeriodeRequest");
@@ -48,6 +50,11 @@ const updateKklPeriodeRequestSchema = z
       example: "genap",
     }),
     max_agt_klp: createOptionalCoercedIntSchema(6),
+    is_active: z.boolean().optional().openapi({
+      example: true,
+      description:
+        "When true, backend deactivates all other KKL periodes so only this periode is active.",
+    }),
   })
   .openapi("UpdateKklPeriodeRequest");
 
@@ -179,6 +186,35 @@ export const updateKklPeriodeRoute = createRoute({
       "KKL periode updated successfully",
     ),
     400: jsonResponse(apiErrorResponseSchema, "Validation error"),
+    401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
+    403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
+    404: jsonResponse(apiErrorResponseSchema, "KKL periode not found"),
+    500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
+  },
+});
+
+export const activateKklPeriodeRoute = createRoute({
+  method: "put",
+  path: "/{id}/activate",
+  tags: ["KKL Periodes"],
+  summary: "Activate KKL periode",
+  description:
+    "Activates one KKL periode and automatically sets all other KKL periodes to inactive.",
+  security: protectedSecurity,
+  middleware: [
+    jwtMiddleware,
+    appTokenMiddleware,
+    requirePermission(),
+  ] as const,
+  request: {
+    params: kklPeriodeIdParamsSchema,
+  },
+  responses: {
+    200: jsonResponse(
+      kklPeriodeMutationResponseSchema,
+      "KKL periode activated successfully",
+    ),
+    400: jsonResponse(apiErrorResponseSchema, "Invalid KKL periode id"),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
     404: jsonResponse(apiErrorResponseSchema, "KKL periode not found"),

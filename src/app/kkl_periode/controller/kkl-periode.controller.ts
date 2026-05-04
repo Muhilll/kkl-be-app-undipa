@@ -120,6 +120,19 @@ export class KklPeriodeController {
         );
       }
 
+      if (
+        body.is_active !== undefined &&
+        typeof body.is_active !== "boolean"
+      ) {
+        return c.json(
+          {
+            success: false,
+            message: "is_active must be boolean",
+          },
+          400,
+        );
+      }
+
       const createResult = await KklPeriodeService.createKklPeriode(body);
 
       if (createResult.conflict) {
@@ -177,6 +190,19 @@ export class KklPeriodeController {
         );
       }
 
+      if (
+        body.is_active !== undefined &&
+        typeof body.is_active !== "boolean"
+      ) {
+        return c.json(
+          {
+            success: false,
+            message: "is_active must be boolean",
+          },
+          400,
+        );
+      }
+
       const updateResult = await KklPeriodeService.updateKklPeriode(
         parsedId.id,
         body,
@@ -193,6 +219,44 @@ export class KklPeriodeController {
         success: true,
         data: updateResult.result,
         message: "KKL periode updated successfully",
+      });
+    } catch (error) {
+      return c.json(
+        {
+          success: false,
+          message:
+            error instanceof Error ? error.message : "Internal server error",
+        },
+        500,
+      );
+    }
+  }
+
+  static async activate(c: Context) {
+    try {
+      const parsedId = KklPeriodeController.parseKklPeriodeIdParam(
+        c.req.param("id"),
+      );
+
+      if (parsedId.success === false) {
+        return c.json({ success: false, message: parsedId.error }, 400);
+      }
+
+      const activateResult = await KklPeriodeService.activateKklPeriode(
+        parsedId.id,
+      );
+
+      if (!activateResult) {
+        return c.json(
+          { success: false, message: "KKL periode not found" },
+          404,
+        );
+      }
+
+      return c.json({
+        success: true,
+        data: activateResult.result,
+        message: "KKL periode activated successfully",
       });
     } catch (error) {
       return c.json(

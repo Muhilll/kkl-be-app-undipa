@@ -171,7 +171,7 @@ export const kkl_periodes = mysqlTable("kkl_periodes", {
   tahun: varchar({ length: 9 }).notNull(),
   semester: mysqlEnum(["ganjil", "genap"]).notNull(),
   max_agt_klp: int().notNull(),
-  is_active: boolean().default(true).notNull(),
+  is_active: boolean().default(false).notNull(),
   created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
   updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
 });

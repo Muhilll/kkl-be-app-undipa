@@ -28,7 +28,10 @@ export class KklPeriodeService {
       return { conflict: true as const };
     }
 
-    const result = await KklPeriodeWriteRepository.createKklPeriode(payload);
+    const result = await KklPeriodeWriteRepository.createKklPeriode({
+      ...payload,
+      is_active: payload.is_active ?? false,
+    });
     return { conflict: false as const, result };
   }
 
@@ -46,6 +49,17 @@ export class KklPeriodeService {
       id,
       payload,
     );
+    return { kklPeriode, result };
+  }
+
+  static async activateKklPeriode(id: number) {
+    const kklPeriode = await KklPeriodeReadRepository.getKklPeriodeById(id);
+
+    if (!kklPeriode) {
+      return null;
+    }
+
+    const result = await KklPeriodeWriteRepository.activateKklPeriode(id);
     return { kklPeriode, result };
   }
 

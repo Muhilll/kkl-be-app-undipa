@@ -10,6 +10,7 @@ import {
   deleteKklPeriodeRoute,
   getAllKklPeriodesRoute,
   getKklPeriodeByIdRoute,
+  activateKklPeriodeRoute,
   updateKklPeriodeRoute,
 } from "./kkl-periode.openapi";
 
@@ -25,6 +26,7 @@ registerOpenApiRoute(
 );
 registerOpenApiRoute(router, createKklPeriodeRoute, KklPeriodeController.create);
 registerOpenApiRoute(router, updateKklPeriodeRoute, KklPeriodeController.update);
+registerOpenApiRoute(router, activateKklPeriodeRoute, KklPeriodeController.activate);
 registerOpenApiRoute(router, deleteKklPeriodeRoute, KklPeriodeController.delete);
 
 export function getKklPeriodeOpenApiDocument(baseUrl: string) {

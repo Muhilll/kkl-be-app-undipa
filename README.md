@@ -120,7 +120,24 @@ Base path utama:
 - `/api/roles`
 - `/api/menus`
 - `/api/role-permissions`
+- `/api/kkl-periodes`
 - `/api/uploads`
+
+### KKL Periode
+
+Tabel `kkl_periodes` memiliki field `is_active` dengan default `false`.
+Aturan bisnisnya: hanya satu periode KKL yang boleh aktif pada satu waktu.
+
+Endpoint aktivasi:
+
+```http
+PUT /api/kkl-periodes/:id/activate
+```
+
+Endpoint ini akan mengaktifkan periode sesuai `id` dan otomatis mengubah semua
+periode KKL lain menjadi nonaktif. `POST /api/kkl-periodes` dan
+`PUT /api/kkl-periodes/:id` juga mengikuti aturan yang sama jika menerima
+`is_active: true`.
 
 ## Authentication dan Header
 

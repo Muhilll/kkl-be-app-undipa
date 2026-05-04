@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import { db } from "../../../db";
 import { kkl_periodes } from "../../../db/schema";
 import { Semester } from "../contract/kkl-periode.contract";
@@ -45,6 +45,25 @@ export class KklPeriodeReadRepository {
       return result[0] || null;
     } catch (error) {
       throw new Error(`Failed to fetch kkl periode: ${error}`);
+    }
+  }
+
+  static async getActiveKklPeriodeExcept(id: number) {
+    try {
+      const result = await db
+        .select()
+        .from(kkl_periodes)
+        .where(
+          and(
+            eq(kkl_periodes.is_active, true),
+            ne(kkl_periodes.id, id),
+          ),
+        )
+        .limit(1);
+
+      return result[0] || null;
+    } catch (error) {
+      throw new Error(`Failed to fetch active kkl periode: ${error}`);
     }
   }
 }
