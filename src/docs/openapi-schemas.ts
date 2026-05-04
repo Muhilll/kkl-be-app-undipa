@@ -198,6 +198,9 @@ export const kklPeriodeSchema = z
     max_agt_klp: z.number().int().openapi({
       example: 5,
     }),
+    is_active: z.boolean().openapi({
+      example: true,
+    }),
     created_at: timestampSchema,
     updated_at: timestampSchema,
   })

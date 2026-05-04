@@ -109,7 +109,7 @@ export const mahasiswas = mysqlTable(
     email: varchar({ length: 100 }).notNull().unique(),
     telp: varchar({ length: 30 }),
     foto: varchar({ length: 255 }),
-    image_public_id: varchar({ length: 255 }),  
+    image_public_id: varchar({ length: 255 }),
     jurusan_id: int().notNull(),
     user_id: int().notNull().unique(),
     created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
@@ -171,6 +171,7 @@ export const kkl_periodes = mysqlTable("kkl_periodes", {
   tahun: varchar({ length: 9 }).notNull(),
   semester: mysqlEnum(["ganjil", "genap"]).notNull(),
   max_agt_klp: int().notNull(),
+  is_active: boolean().default(true).notNull(),
   created_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
   updated_at: datetime().default(sql`CURRENT_TIMESTAMP`).notNull(),
 });

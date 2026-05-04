@@ -30,6 +30,9 @@ const createKklPeriodeRequestSchema = z
     max_agt_klp: z.coerce.number().int().openapi({
       example: 5,
     }),
+    is_active: z.boolean().optional().openapi({
+      example: true,
+    }),
   })
   .openapi("CreateKklPeriodeRequest");
 

@@ -6,6 +6,7 @@ export type KklPeriodeEntity = {
   tahun: string;
   semester: Semester;
   max_agt_klp: number;
+  is_active: boolean;
   created_at: Date;
   updated_at: Date;
 };
