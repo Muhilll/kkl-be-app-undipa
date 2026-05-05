@@ -176,6 +176,9 @@ export const instansiPenilaiSchema = z
     jabatan: z.string().openapi({
       example: "Manager HRD",
     }),
+    user_id: z.number().int().openapi({
+      example: 5,
+    }),
     created_at: timestampSchema,
     updated_at: timestampSchema,
   })

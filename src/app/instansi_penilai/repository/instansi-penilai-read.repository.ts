@@ -8,6 +8,7 @@ const instansiPenilaiSelect = {
   virtual_account: instansi_penilais.virtual_account,
   nama: instansi_penilais.nama,
   jabatan: instansi_penilais.jabatan,
+  user_id: instansi_penilais.user_id,
   created_at: instansi_penilais.created_at,
   updated_at: instansi_penilais.updated_at,
 };
