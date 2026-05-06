@@ -49,7 +49,7 @@ const updateMahasiswaRequestSchema = z
     nim: z.string().min(1).optional().openapi({
       example: "20260002",
     }),
-    password: z.string().min(1).optional().openapi({
+    password: z.string().optional().openapi({
       example: "newpassword123",
     }),
     nama: z.string().min(1).optional().openapi({

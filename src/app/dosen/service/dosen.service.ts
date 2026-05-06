@@ -50,8 +50,10 @@ export class DosenService {
 
     const updateData = { ...payload };
 
-    if (payload.password) {
+    if (payload.password && payload.password.trim() !== "") {
       updateData.password = await hash(payload.password, 10);
+    } else {
+      delete updateData.password;
     }
 
     const result = await DosenWriteRepository.updateDosen(

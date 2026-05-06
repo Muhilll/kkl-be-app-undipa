@@ -46,7 +46,7 @@ const updateDosenRequestSchema = z
     nidn: z.string().min(1).optional().openapi({
       example: "0912345602",
     }),
-    password: z.string().min(1).optional().openapi({
+    password: z.string().optional().openapi({
       example: "newpassword123",
     }),
     nama: z.string().min(1).optional().openapi({
