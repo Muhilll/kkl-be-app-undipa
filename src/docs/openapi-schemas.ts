@@ -327,6 +327,7 @@ export const laporanSchema = z
     jam: z.string().openapi({ example: "08:00-16:00" }),
     aktifitas: z.string().openapi({ example: "Kegiatan observasi lapangan" }),
     file: z.string().nullable().openapi({ example: null }),
+    file_public_id: z.string().nullable().openapi({ example: null }),
     latitude: z.string().nullable().openapi({ example: "-5.14766500" }),
     longitude: z.string().nullable().openapi({ example: "119.43273200" }),
     jarak: z.string().nullable().openapi({ example: "0.50" }),

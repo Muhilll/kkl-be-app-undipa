@@ -4,6 +4,7 @@ export type CreateLaporanRequestDto = {
   jam: string;
   aktifitas: string;
   file?: string | null;
+  file_public_id?: string | null;
   latitude?: string | null;
   longitude?: string | null;
   jarak?: string | null;
@@ -16,6 +17,7 @@ export type UpdateLaporanRequestDto = Partial<{
   jam: string;
   aktifitas: string;
   file: string | null;
+  file_public_id: string | null;
   latitude: string | null;
   longitude: string | null;
   jarak: string | null;

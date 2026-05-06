@@ -87,6 +87,56 @@ export class LaporanController {
     }
   }
 
+  static async getByMahasiswaId(c: Context) {
+    try {
+      const parsedId = LaporanController.parseLaporanIdParam(c.req.param("mahasiswaId"));
+      if (parsedId.success === false) {
+        return c.json({ success: false, message: parsedId.error }, 400);
+      }
+
+      const laporans = await LaporanService.getLaporansByMahasiswaId(parsedId.id);
+
+      return c.json({
+        success: true,
+        data: laporans,
+        message: "Laporans fetched successfully",
+      });
+    } catch (error) {
+      return c.json(
+        {
+          success: false,
+          message: error instanceof Error ? error.message : "Internal server error",
+        },
+        500,
+      );
+    }
+  }
+
+  static async checkTodayByMahasiswaId(c: Context) {
+    try {
+      const parsedId = LaporanController.parseLaporanIdParam(c.req.param("mahasiswaId"));
+      if (parsedId.success === false) {
+        return c.json({ success: false, message: parsedId.error }, 400);
+      }
+
+      const isReported = await LaporanService.checkTodayLaporanByMahasiswaId(parsedId.id);
+
+      return c.json({
+        success: true,
+        data: { isReported },
+        message: "Today laporan checked successfully",
+      });
+    } catch (error) {
+      return c.json(
+        {
+          success: false,
+          message: error instanceof Error ? error.message : "Internal server error",
+        },
+        500,
+      );
+    }
+  }
+
   static async create(c: Context) {
     try {
       const body: CreateLaporanRequestDto = await c.req.json();

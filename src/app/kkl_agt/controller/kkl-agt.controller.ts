@@ -87,6 +87,45 @@ export class KklAgtController {
     }
   }
 
+  static async getByKlpId(c: Context) {
+    try {
+      const parsedId = KklAgtController.parseKklAgtIdParam(c.req.param("klpId"));
+      if (parsedId.success === false) {
+        return c.json({ success: false, message: parsedId.error }, 400);
+      }
+      const agts = await KklAgtService.getKklAgtsByKlpId(parsedId.id);
+      return c.json({ success: true, data: agts, message: "KKL agts fetched successfully" });
+    } catch (error) {
+      return c.json({ success: false, message: error instanceof Error ? error.message : "Internal server error" }, 500);
+    }
+  }
+
+  static async getByMahasiswaId(c: Context) {
+    try {
+      const parsedId = KklAgtController.parseKklAgtIdParam(c.req.param("mahasiswaId"));
+      if (parsedId.success === false) {
+        return c.json({ success: false, message: parsedId.error }, 400);
+      }
+
+      const kklAgt = await KklAgtService.getKklAgtDetailByMahasiswaId(parsedId.id);
+
+      if (!kklAgt) {
+        return c.json({ success: false, message: "KKL data not found for this mahasiswa" }, 404);
+      }
+
+      return c.json({
+        success: true,
+        data: kklAgt,
+        message: "KKL agt fetched successfully",
+      });
+    } catch (error) {
+      return c.json(
+        { success: false, message: error instanceof Error ? error.message : "Internal server error" },
+        500,
+      );
+    }
+  }
+
   static async create(c: Context) {
     try {
       const body: CreateKklAgtRequestDto = await c.req.json();

@@ -15,6 +15,14 @@ export class KklAgtService {
     return KklAgtReadRepository.getKklAgtById(id);
   }
 
+  static async getKklAgtDetailByMahasiswaId(mahasiswaId: number) {
+    return KklAgtReadRepository.getKklAgtDetailByMahasiswaId(mahasiswaId);
+  }
+
+  static async getKklAgtsByKlpId(klpId: number) {
+    return KklAgtReadRepository.getKklAgtsByKlpId(klpId);
+  }
+
   static async createKklAgt(payload: CreateKklAgtRequestDto) {
     const targetKlp = await KklKlpReadRepository.getKklKlpById(payload.kkl_klp_id);
     if (!targetKlp) {

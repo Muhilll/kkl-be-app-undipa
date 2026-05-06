@@ -2,6 +2,7 @@ import { NavigationItem, PublicUser } from "../contract/user.contract";
 
 export type LoginResponseDto = {
   token: string;
+  expires_at: number;
   user: {
     id: number;
     username: string;

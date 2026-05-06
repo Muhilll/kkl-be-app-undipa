@@ -10,6 +10,7 @@ import {
   deleteMahasiswaRoute,
   getAllMahasiswasRoute,
   getMahasiswaByIdRoute,
+  getMahasiswaByUserIdRoute,
   updateMahasiswaRoute,
 } from "./mahasiswa.openapi";
 
@@ -18,6 +19,7 @@ const router = createOpenApiRouter();
 registerDefaultSecuritySchemes(router);
 
 registerOpenApiRoute(router, getAllMahasiswasRoute, MahasiswaController.getAll);
+registerOpenApiRoute(router, getMahasiswaByUserIdRoute, MahasiswaController.getByUserId);
 registerOpenApiRoute(router, getMahasiswaByIdRoute, MahasiswaController.getById);
 registerOpenApiRoute(router, createMahasiswaRoute, MahasiswaController.create);
 registerOpenApiRoute(router, updateMahasiswaRoute, MahasiswaController.update);

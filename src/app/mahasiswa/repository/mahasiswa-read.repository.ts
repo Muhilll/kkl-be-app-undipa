@@ -38,6 +38,26 @@ export class MahasiswaReadRepository {
     }
   }
 
+  static async getMahasiswaByUserId(userId: number) {
+    try {
+      const result = await db
+        .select({ ...mahasiswaSelect, jurusan: jurusanSelect })
+        .from(mahasiswas)
+        .leftJoin(jurusans, eq(mahasiswas.jurusan_id, jurusans.id))
+        .where(eq(mahasiswas.user_id, userId))
+        .limit(1);
+
+      if (!result[0]) return null;
+
+      return {
+        ...result[0],
+        jurusan: result[0].jurusan ?? undefined,
+      };
+    } catch (error) {
+      throw new Error(`Failed to fetch mahasiswa by user_id: ${error}`);
+    }
+  }
+
   static async getMahasiswaById(id: number) {
     try {
       const result = await db

@@ -10,6 +10,8 @@ import {
   deleteLaporanRoute,
   getAllLaporansRoute,
   getLaporanByIdRoute,
+  getLaporansByMahasiswaIdRoute,
+  checkTodayLaporanByMahasiswaIdRoute,
   updateLaporanRoute,
 } from "./laporan.openapi";
 
@@ -18,6 +20,8 @@ const router = createOpenApiRouter();
 registerDefaultSecuritySchemes(router);
 
 registerOpenApiRoute(router, getAllLaporansRoute, LaporanController.getAll);
+registerOpenApiRoute(router, getLaporansByMahasiswaIdRoute, LaporanController.getByMahasiswaId);
+registerOpenApiRoute(router, checkTodayLaporanByMahasiswaIdRoute, LaporanController.checkTodayByMahasiswaId);
 registerOpenApiRoute(router, getLaporanByIdRoute, LaporanController.getById);
 registerOpenApiRoute(router, createLaporanRoute, LaporanController.create);
 registerOpenApiRoute(router, updateLaporanRoute, LaporanController.update);

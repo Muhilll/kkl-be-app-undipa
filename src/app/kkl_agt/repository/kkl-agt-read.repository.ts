@@ -69,6 +69,17 @@ export class KklAgtReadRepository {
     }
   }
 
+  static async getKklAgtsByKlpId(klpId: number) {
+    try {
+      const rows = await agtJoins(
+        db.select(selectAgtFields()).from(kkl_agts)
+      ).where(eq(kkl_agts.kkl_klp_id, klpId));
+      return rows.map(mapAgtRow);
+    } catch (error) {
+      throw new Error(`Failed to fetch kkl agts by klp: ${error}`);
+    }
+  }
+
   static async getKklAgtById(id: number) {
     try {
       const rows = await agtJoins(
@@ -114,6 +125,18 @@ export class KklAgtReadRepository {
       return result[0] || null;
     } catch (error) {
       throw new Error(`Failed to fetch kkl agt by mahasiswa: ${error}`);
+    }
+  }
+
+  static async getKklAgtDetailByMahasiswaId(mahasiswaId: number) {
+    try {
+      const rows = await agtJoins(
+        db.select(selectAgtFields()).from(kkl_agts)
+      ).where(eq(kkl_agts.mahasiswa_id, mahasiswaId)).limit(1);
+
+      return rows[0] ? mapAgtRow(rows[0]) : null;
+    } catch (error) {
+      throw new Error(`Failed to fetch kkl agt detail by mahasiswa: ${error}`);
     }
   }
 

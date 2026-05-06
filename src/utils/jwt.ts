@@ -9,12 +9,12 @@ export interface TokenPayload {
   is_active: boolean;
 }
 
-type JWTExpire = "1h" | "24h" | "7d";
+type JWTExpire = "1h" | "24h" | "7d" | "30d";
 
 /**
  * Generate JWT token
  */
-export function generateToken(payload: TokenPayload, expiresIn: JWTExpire = "1h"): string {
+export function generateToken(payload: TokenPayload, expiresIn: JWTExpire = "7d"): string {
   try {
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn });
     return token;

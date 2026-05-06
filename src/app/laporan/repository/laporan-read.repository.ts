@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 import { db } from "../../../db";
 import { laporans, kkl_agts, mahasiswas } from "../../../db/schema";
 
@@ -10,6 +10,7 @@ function selectLaporanFields() {
     jam: laporans.jam,
     aktifitas: laporans.aktifitas,
     file: laporans.file,
+    file_public_id: laporans.file_public_id,
     latitude: laporans.latitude,
     longitude: laporans.longitude,
     jarak: laporans.jarak,
@@ -36,6 +37,7 @@ function mapLaporanRow(row: any) {
     jam: row.jam,
     aktifitas: row.aktifitas,
     file: row.file,
+    file_public_id: row.file_public_id,
     latitude: row.latitude,
     longitude: row.longitude,
     jarak: row.jarak,
@@ -67,6 +69,40 @@ export class LaporanReadRepository {
       return rows[0] ? mapLaporanRow(rows[0]) : null;
     } catch (error) {
       throw new Error(`Failed to fetch laporan: ${error}`);
+    }
+  }
+
+  static async getLaporansByMahasiswaId(mahasiswaId: number, limitCount: number = 5) {
+    try {
+      const rows = await laporanJoins(
+        db.select(selectLaporanFields()).from(laporans)
+      )
+      .where(eq(kkl_agts.mahasiswa_id, mahasiswaId))
+      .orderBy(desc(laporans.tanggal), desc(laporans.created_at))
+      .limit(limitCount);
+
+      return rows.map(mapLaporanRow);
+    } catch (error) {
+      throw new Error(`Failed to fetch laporans by mahasiswa: ${error}`);
+    }
+  }
+
+  static async checkTodayLaporanByMahasiswaId(mahasiswaId: number) {
+    try {
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      const rows = await laporanJoins(
+        db.select(selectLaporanFields()).from(laporans)
+      )
+      .where(
+        and(
+          eq(kkl_agts.mahasiswa_id, mahasiswaId),
+          eq(laporans.tanggal, today as any)
+        )
+      ).limit(1);
+
+      return rows.length > 0;
+    } catch (error) {
+      throw new Error(`Failed to check today laporan by mahasiswa: ${error}`);
     }
   }
 }

@@ -27,8 +27,12 @@ export class UserAuthService {
       is_active: user.is_active,
     });
 
+    // Token default expiry is 7 days
+    const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000;
+
     return {
       token,
+      expires_at: expiresAt,
       user: {
         id: user.id,
         username: user.username,

@@ -89,6 +89,39 @@ export class MahasiswaController {
     }
   }
 
+  static async getByUserId(c: Context) {
+    try {
+      const parsedId = MahasiswaController.parseMahasiswaIdParam(
+        c.req.param("userId"),
+      );
+
+      if (parsedId.success === false) {
+        return c.json({ success: false, message: parsedId.error }, 400);
+      }
+
+      const mahasiswa = await MahasiswaService.getMahasiswaByUserId(parsedId.id);
+
+      if (!mahasiswa) {
+        return c.json({ success: false, message: "Mahasiswa not found" }, 404);
+      }
+
+      return c.json({
+        success: true,
+        data: mahasiswa,
+        message: "Mahasiswa fetched successfully",
+      });
+    } catch (error) {
+      return c.json(
+        {
+          success: false,
+          message:
+            error instanceof Error ? error.message : "Internal server error",
+        },
+        500,
+      );
+    }
+  }
+
   static async create(c: Context) {
     try {
       const body: CreateMahasiswaRequestDto = await c.req.json();

@@ -19,6 +19,12 @@ export class MahasiswaService {
     return MahasiswaReadRepository.getMahasiswaById(id);
   }
 
+  static async getMahasiswaByUserId(
+    userId: number,
+  ): Promise<MahasiswaResponseDto | null> {
+    return MahasiswaReadRepository.getMahasiswaByUserId(userId);
+  }
+
   static async createMahasiswa(payload: CreateMahasiswaRequestDto) {
     const existingMahasiswa = await MahasiswaReadRepository.getMahasiswaByUniqueFields(
         payload.nim,

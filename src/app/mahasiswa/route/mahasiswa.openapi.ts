@@ -111,6 +111,25 @@ export const getAllMahasiswasRoute = createRoute({
   },
 });
 
+export const getMahasiswaByUserIdRoute = createRoute({
+  method: "get",
+  path: "/by-user/{userId}",
+  tags: ["Mahasiswas"],
+  summary: "Get mahasiswa by user id",
+  security: protectedSecurity,
+  middleware: [jwtMiddleware, appTokenMiddleware] as const,
+  request: {
+    params: createNumericPathParamsSchema("userId"),
+  },
+  responses: {
+    200: jsonResponse(mahasiswaDetailResponseSchema, "Mahasiswa fetched successfully"),
+    400: jsonResponse(apiErrorResponseSchema, "Invalid user id"),
+    401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
+    404: jsonResponse(apiErrorResponseSchema, "Mahasiswa not found"),
+    500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
+  },
+});
+
 export const getMahasiswaByIdRoute = createRoute({
   method: "get",
   path: "/{id}",

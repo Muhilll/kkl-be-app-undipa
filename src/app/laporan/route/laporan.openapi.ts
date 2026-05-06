@@ -22,6 +22,7 @@ const createLaporanRequestSchema = z
     jam: z.string().openapi({ example: "08:00-16:00" }),
     aktifitas: z.string().openapi({ example: "Kegiatan observasi lapangan" }),
     file: z.string().nullable().optional().openapi({ example: null }),
+    file_public_id: z.string().nullable().optional().openapi({ example: null }),
     latitude: z.string().nullable().optional().openapi({ example: "-5.14766500" }),
     longitude: z.string().nullable().optional().openapi({ example: "119.43273200" }),
     jarak: z.string().nullable().optional().openapi({ example: "0.50" }),
@@ -36,6 +37,7 @@ const updateLaporanRequestSchema = z
     jam: z.string().optional().openapi({ example: "08:00-16:00" }),
     aktifitas: z.string().optional().openapi({ example: "Kegiatan observasi lapangan" }),
     file: z.string().nullable().optional().openapi({ example: null }),
+    file_public_id: z.string().nullable().optional().openapi({ example: null }),
     latitude: z.string().nullable().optional().openapi({ example: "-5.14766500" }),
     longitude: z.string().nullable().optional().openapi({ example: "119.43273200" }),
     jarak: z.string().nullable().optional().openapi({ example: "0.50" }),
@@ -100,6 +102,48 @@ export const getLaporanByIdRoute = createRoute({
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
     404: jsonResponse(apiErrorResponseSchema, "Laporan not found"),
+    500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
+  },
+});
+
+export const getLaporansByMahasiswaIdRoute = createRoute({
+  method: "get",
+  path: "/by-mahasiswa/{mahasiswaId}",
+  tags: ["Laporans"],
+  summary: "Get laporans by mahasiswa id",
+  security: protectedSecurity,
+  middleware: [
+    jwtMiddleware,
+    appTokenMiddleware,
+  ] as const,
+  request: {
+    params: createNumericPathParamsSchema("mahasiswaId"),
+  },
+  responses: {
+    200: jsonResponse(laporanListResponseSchema, "Laporans fetched successfully"),
+    400: jsonResponse(apiErrorResponseSchema, "Invalid mahasiswa id"),
+    401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
+    500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
+  },
+});
+
+export const checkTodayLaporanByMahasiswaIdRoute = createRoute({
+  method: "get",
+  path: "/check-today/{mahasiswaId}",
+  tags: ["Laporans"],
+  summary: "Check if mahasiswa has reported today",
+  security: protectedSecurity,
+  middleware: [
+    jwtMiddleware,
+    appTokenMiddleware,
+  ] as const,
+  request: {
+    params: createNumericPathParamsSchema("mahasiswaId"),
+  },
+  responses: {
+    200: jsonResponse(createSuccessEnvelopeSchema("CheckTodayResponse", z.object({ isReported: z.boolean() }), "Today laporan checked successfully"), "Today laporan checked successfully"),
+    400: jsonResponse(apiErrorResponseSchema, "Invalid mahasiswa id"),
+    401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
   },
 });

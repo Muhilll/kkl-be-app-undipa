@@ -94,6 +94,43 @@ export const getKklAgtByIdRoute = createRoute({
   },
 });
 
+export const getKklAgtByMahasiswaIdRoute = createRoute({
+  method: "get",
+  path: "/by-mahasiswa/{mahasiswaId}",
+  tags: ["KKL Agts"],
+  summary: "Get KKL agt detail by mahasiswa id",
+  security: protectedSecurity,
+  middleware: [jwtMiddleware, appTokenMiddleware] as const,
+  request: {
+    params: createNumericPathParamsSchema("mahasiswaId"),
+  },
+  responses: {
+    200: jsonResponse(kklAgtDetailResponseSchema, "KKL agt fetched successfully"),
+    400: jsonResponse(apiErrorResponseSchema, "Invalid mahasiswa id"),
+    401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
+    404: jsonResponse(apiErrorResponseSchema, "KKL data not found"),
+    500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
+  },
+});
+
+export const getKklAgtsByKlpIdRoute = createRoute({
+  method: "get",
+  path: "/by-klp/{klpId}",
+  tags: ["KKL Agts"],
+  summary: "Get KKL agt members by kelompok id",
+  security: protectedSecurity,
+  middleware: [jwtMiddleware, appTokenMiddleware] as const,
+  request: {
+    params: createNumericPathParamsSchema("klpId"),
+  },
+  responses: {
+    200: jsonResponse(kklAgtListResponseSchema, "KKL agts fetched successfully"),
+    400: jsonResponse(apiErrorResponseSchema, "Invalid klp id"),
+    401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
+    500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
+  },
+});
+
 export const createKklAgtRoute = createRoute({
   method: "post",
   path: "/",

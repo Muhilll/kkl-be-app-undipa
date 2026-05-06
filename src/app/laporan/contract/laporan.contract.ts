@@ -5,6 +5,7 @@ export type LaporanEntity = {
   jam: string;
   aktifitas: string;
   file: string | null;
+  file_public_id: string | null;
   latitude: string | null;
   longitude: string | null;
   jarak: string | null;

@@ -4,6 +4,7 @@ import {
 } from "../dto/laporan-request.dto";
 import { LaporanReadRepository } from "../repository/laporan-read.repository";
 import { LaporanWriteRepository } from "../repository/laporan-write.repository";
+import { deleteImageFromCloudinarySafely } from "../../../utils/cloudinary";
 
 export class LaporanService {
   static async getAllLaporans() {
@@ -12,6 +13,14 @@ export class LaporanService {
 
   static async getLaporanById(id: number) {
     return LaporanReadRepository.getLaporanById(id);
+  }
+
+  static async getLaporansByMahasiswaId(mahasiswaId: number) {
+    return LaporanReadRepository.getLaporansByMahasiswaId(mahasiswaId);
+  }
+
+  static async checkTodayLaporanByMahasiswaId(mahasiswaId: number) {
+    return LaporanReadRepository.checkTodayLaporanByMahasiswaId(mahasiswaId);
   }
 
   static async createLaporan(payload: CreateLaporanRequestDto) {
@@ -26,6 +35,10 @@ export class LaporanService {
       return null;
     }
 
+    if (payload.file_public_id && laporan.file_public_id && payload.file_public_id !== laporan.file_public_id) {
+      await deleteImageFromCloudinarySafely(laporan.file_public_id);
+    }
+
     const result = await LaporanWriteRepository.updateLaporan(id, payload);
     return { laporan, result };
   }
@@ -35,6 +48,10 @@ export class LaporanService {
 
     if (!laporan) {
       return null;
+    }
+
+    if (laporan.file_public_id) {
+      await deleteImageFromCloudinarySafely(laporan.file_public_id);
     }
 
     const result = await LaporanWriteRepository.deleteLaporan(id);

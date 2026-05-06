@@ -236,6 +236,7 @@ export const laporans = mysqlTable(
     jam: varchar({ length: 50 }).notNull(),
     aktifitas: text().notNull(),
     file: varchar({ length: 255 }),
+    file_public_id: varchar({ length: 255 }),
     latitude: decimal({ precision: 10, scale: 8 }),
     longitude: decimal({ precision: 11, scale: 8 }),
     jarak: decimal({ precision: 10, scale: 2 }),
