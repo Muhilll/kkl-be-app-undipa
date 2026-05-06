@@ -14,7 +14,7 @@ function mapAgtRow(row: any) {
       id: row.klp_id,
       nama: row.klp_nama,
       kkl_periode: row.periode_id ? { id: row.periode_id, nama: row.periode_nama, tahun: row.periode_tahun, semester: row.periode_semester } : null,
-      instansi: row.instansi_id ? { id: row.instansi_id, nama: row.instansi_nama, latitude: row.instansi_lat, longitude: row.instansi_lng } : null,
+      instansi: row.instansi_id ? { id: row.instansi_id, nama: row.instansi_nama, latitude: row.instansi_lat, longitude: row.instansi_lng, alamat: row.instansi_alamat, telp: row.instansi_telp } : null,
       dosen: row.dosen_id ? { id: row.dosen_id, nidn: row.dosen_nidn, nama: row.dosen_nama } : null,
     } : null,
   };
@@ -40,6 +40,8 @@ function selectAgtFields() {
     instansi_nama: instansis.nama,
     instansi_lat: instansis.latitude,
     instansi_lng: instansis.longitude,
+    instansi_alamat: instansis.alamat,
+    instansi_telp: instansis.telp,
     dosen_id: dosens.id,
     dosen_nidn: dosens.nidn,
     dosen_nama: dosens.nama,
