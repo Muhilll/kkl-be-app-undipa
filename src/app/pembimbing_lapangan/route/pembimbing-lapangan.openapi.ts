@@ -11,11 +11,11 @@ import {
   protectedSecurity,
   writeResultSchema,
 } from "../../../docs/openapi-common";
-import { instansiPenilaiSchema } from "../../../docs/openapi-schemas";
+import { pembimbingLapanganSchema } from "../../../docs/openapi-schemas";
 
-const instansiPenilaiIdParamsSchema = createNumericPathParamsSchema("id");
+const pembimbingIdParamsSchema = createNumericPathParamsSchema("id");
 
-const createInstansiPenilaiRequestSchema = z
+const createPembimbingRequestSchema = z
   .object({
     kkl_klp_id: z.coerce.number().int().openapi({
       example: 1,
@@ -33,15 +33,15 @@ const createInstansiPenilaiRequestSchema = z
       example: "Manager HRD",
     }),
   })
-  .openapi("CreateInstansiPenilaiRequest");
+  .openapi("CreatePembimbingLapanganRequest");
 
-const updateInstansiPenilaiRequestSchema = z
+const updatePembimbingRequestSchema = z
   .object({
     kkl_klp_id: createOptionalCoercedIntSchema(1),
     virtual_account: z.string().min(1).optional().openapi({
       example: "VA123456789",
     }),
-    password: z.string().min(1).optional().openapi({
+    password: z.string().optional().openapi({
       example: "newpassword123",
     }),
     nama: z.string().min(1).optional().openapi({
@@ -51,31 +51,31 @@ const updateInstansiPenilaiRequestSchema = z
       example: "General Manager",
     }),
   })
-  .openapi("UpdateInstansiPenilaiRequest");
+  .openapi("UpdatePembimbingLapanganRequest");
 
-const instansiPenilaiListResponseSchema = createSuccessEnvelopeSchema(
-  "InstansiPenilaiListResponse",
-  z.array(instansiPenilaiSchema),
-  "Instansi Penilais fetched successfully",
+const pembimbingListResponseSchema = createSuccessEnvelopeSchema(
+  "PembimbingLapanganListResponse",
+  z.array(pembimbingLapanganSchema),
+  "Pembimbing Lapangan fetched successfully",
 );
 
-const instansiPenilaiDetailResponseSchema = createSuccessEnvelopeSchema(
-  "InstansiPenilaiDetailResponse",
-  instansiPenilaiSchema,
-  "Instansi Penilai fetched successfully",
+const pembimbingDetailResponseSchema = createSuccessEnvelopeSchema(
+  "PembimbingLapanganDetailResponse",
+  pembimbingLapanganSchema,
+  "Pembimbing Lapangan fetched successfully",
 );
 
-const instansiPenilaiMutationResponseSchema = createSuccessEnvelopeSchema(
-  "InstansiPenilaiMutationResponse",
+const pembimbingMutationResponseSchema = createSuccessEnvelopeSchema(
+  "PembimbingLapanganMutationResponse",
   writeResultSchema,
-  "Instansi Penilai created successfully",
+  "Pembimbing Lapangan created successfully",
 );
 
-export const getAllInstansiPenilaisRoute = createRoute({
+export const getAllPembimbingsRoute = createRoute({
   method: "get",
   path: "/",
-  tags: ["InstansiPenilais"],
-  summary: "Get all instansi penilais",
+  tags: ["PembimbingLapangan"],
+  summary: "Get all pembimbing lapangan",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -84,8 +84,8 @@ export const getAllInstansiPenilaisRoute = createRoute({
   ] as const,
   responses: {
     200: jsonResponse(
-      instansiPenilaiListResponseSchema,
-      "Instansi Penilais fetched successfully",
+      pembimbingListResponseSchema,
+      "Pembimbing Lapangan fetched successfully",
     ),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
@@ -93,11 +93,11 @@ export const getAllInstansiPenilaisRoute = createRoute({
   },
 });
 
-export const getInstansiPenilaiByIdRoute = createRoute({
+export const getPembimbingByIdRoute = createRoute({
   method: "get",
   path: "/{id}",
-  tags: ["InstansiPenilais"],
-  summary: "Get instansi penilai by id",
+  tags: ["PembimbingLapangan"],
+  summary: "Get pembimbing lapangan by id",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -105,26 +105,26 @@ export const getInstansiPenilaiByIdRoute = createRoute({
     requirePermission(),
   ] as const,
   request: {
-    params: instansiPenilaiIdParamsSchema,
+    params: pembimbingIdParamsSchema,
   },
   responses: {
     200: jsonResponse(
-      instansiPenilaiDetailResponseSchema,
-      "Instansi Penilai fetched successfully",
+      pembimbingDetailResponseSchema,
+      "Pembimbing Lapangan fetched successfully",
     ),
-    400: jsonResponse(apiErrorResponseSchema, "Invalid instansi penilai id"),
+    400: jsonResponse(apiErrorResponseSchema, "Invalid pembimbing lapangan id"),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
-    404: jsonResponse(apiErrorResponseSchema, "Instansi Penilai not found"),
+    404: jsonResponse(apiErrorResponseSchema, "Pembimbing Lapangan not found"),
     500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
   },
 });
 
-export const createInstansiPenilaiRoute = createRoute({
+export const createPembimbingRoute = createRoute({
   method: "post",
   path: "/",
-  tags: ["InstansiPenilais"],
-  summary: "Create instansi penilai",
+  tags: ["PembimbingLapangan"],
+  summary: "Create pembimbing lapangan",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -136,15 +136,15 @@ export const createInstansiPenilaiRoute = createRoute({
       required: true,
       content: {
         "application/json": {
-          schema: createInstansiPenilaiRequestSchema,
+          schema: createPembimbingRequestSchema,
         },
       },
     },
   },
   responses: {
     201: jsonResponse(
-      instansiPenilaiMutationResponseSchema,
-      "Instansi Penilai created successfully",
+      pembimbingMutationResponseSchema,
+      "Pembimbing Lapangan created successfully",
     ),
     400: jsonResponse(apiErrorResponseSchema, "Validation error"),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
@@ -153,11 +153,11 @@ export const createInstansiPenilaiRoute = createRoute({
   },
 });
 
-export const updateInstansiPenilaiRoute = createRoute({
+export const updatePembimbingRoute = createRoute({
   method: "put",
   path: "/{id}",
-  tags: ["InstansiPenilais"],
-  summary: "Update instansi penilai",
+  tags: ["PembimbingLapangan"],
+  summary: "Update pembimbing lapangan",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -165,34 +165,34 @@ export const updateInstansiPenilaiRoute = createRoute({
     requirePermission(),
   ] as const,
   request: {
-    params: instansiPenilaiIdParamsSchema,
+    params: pembimbingIdParamsSchema,
     body: {
       required: true,
       content: {
         "application/json": {
-          schema: updateInstansiPenilaiRequestSchema,
+          schema: updatePembimbingRequestSchema,
         },
       },
     },
   },
   responses: {
     200: jsonResponse(
-      instansiPenilaiMutationResponseSchema,
-      "Instansi Penilai updated successfully",
+      pembimbingMutationResponseSchema,
+      "Pembimbing Lapangan updated successfully",
     ),
     400: jsonResponse(apiErrorResponseSchema, "Validation error"),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
-    404: jsonResponse(apiErrorResponseSchema, "Instansi Penilai not found"),
+    404: jsonResponse(apiErrorResponseSchema, "Pembimbing Lapangan not found"),
     500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
   },
 });
 
-export const deleteInstansiPenilaiRoute = createRoute({
+export const deletePembimbingRoute = createRoute({
   method: "delete",
   path: "/{id}",
-  tags: ["InstansiPenilais"],
-  summary: "Delete instansi penilai",
+  tags: ["PembimbingLapangan"],
+  summary: "Delete pembimbing lapangan",
   security: protectedSecurity,
   middleware: [
     jwtMiddleware,
@@ -200,17 +200,17 @@ export const deleteInstansiPenilaiRoute = createRoute({
     requirePermission(),
   ] as const,
   request: {
-    params: instansiPenilaiIdParamsSchema,
+    params: pembimbingIdParamsSchema,
   },
   responses: {
     200: jsonResponse(
-      instansiPenilaiMutationResponseSchema,
-      "Instansi Penilai deleted successfully",
+      pembimbingMutationResponseSchema,
+      "Pembimbing Lapangan deleted successfully",
     ),
-    400: jsonResponse(apiErrorResponseSchema, "Invalid instansi penilai id"),
+    400: jsonResponse(apiErrorResponseSchema, "Invalid pembimbing lapangan id"),
     401: jsonResponse(apiErrorResponseSchema, "Unauthorized"),
     403: jsonResponse(apiErrorResponseSchema, "Forbidden"),
-    404: jsonResponse(apiErrorResponseSchema, "Instansi Penilai not found"),
+    404: jsonResponse(apiErrorResponseSchema, "Pembimbing Lapangan not found"),
     500: jsonResponse(apiErrorResponseSchema, "Internal server error"),
   },
 });

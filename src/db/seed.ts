@@ -2,7 +2,7 @@ import { isNotNull, isNull } from "drizzle-orm";
 import { hash } from "bcryptjs";
 import {
   db,
-  instansi_penilais,
+  pembimbings,
   instansis,
   jurusans,
   kkl_agts,
@@ -126,7 +126,7 @@ const menuSeedData = [
 
 async function clearAllTables() {
   await db.delete(penilaians);
-  await db.delete(instansi_penilais);
+  await db.delete(pembimbings);
   await db.delete(laporans);
   await db.delete(kkl_agts);
   await db.delete(kkl_klps);

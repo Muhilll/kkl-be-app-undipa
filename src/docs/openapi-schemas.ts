@@ -159,7 +159,7 @@ export const instansiSchema = z
   })
   .openapi("Instansi");
 
-export const instansiPenilaiSchema = z
+export const pembimbingLapanganSchema = z
   .object({
     id: z.number().int().openapi({
       example: 1,
@@ -182,7 +182,7 @@ export const instansiPenilaiSchema = z
     created_at: timestampSchema,
     updated_at: timestampSchema,
   })
-  .openapi("InstansiPenilai");
+  .openapi("PembimbingLapangan");
 
 export const kklPeriodeSchema = z
   .object({
@@ -324,7 +324,7 @@ export const laporanSchema = z
     id: z.number().int().openapi({ example: 1 }),
     kkl_agt_id: z.number().int().openapi({ example: 1 }),
     tanggal: z.string().openapi({ example: "2026-05-01" }),
-    jam: z.string().openapi({ example: "08:00:00" }),
+    jam: z.string().openapi({ example: "08:00-16:00" }),
     aktifitas: z.string().openapi({ example: "Kegiatan observasi lapangan" }),
     file: z.string().nullable().openapi({ example: null }),
     latitude: z.string().nullable().openapi({ example: "-5.14766500" }),
@@ -353,7 +353,7 @@ export const penilaianSchema = z
     kkl_agt_id: z.number().int().openapi({
       example: 1,
     }),
-    instansi_penilai_id: z.number().int().openapi({
+    pembimbing_id: z.number().int().openapi({
       example: 1,
     }),
     lama_praktek: z.number().int().openapi({ example: 85 }),

@@ -1,4 +1,4 @@
-export type CreateInstansiPenilaiRequestDto = {
+export type CreatePembimbingLapanganRequestDto = {
   kkl_klp_id: number;
   virtual_account: string;
   password: string;
@@ -6,7 +6,7 @@ export type CreateInstansiPenilaiRequestDto = {
   jabatan: string;
 };
 
-export type UpdateInstansiPenilaiRequestDto = Partial<{
+export type UpdatePembimbingLapanganRequestDto = Partial<{
   kkl_klp_id: number;
   virtual_account: string;
   password: string;

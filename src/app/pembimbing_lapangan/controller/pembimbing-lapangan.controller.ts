@@ -1,18 +1,18 @@
 import { Context } from "hono";
 import {
-  CreateInstansiPenilaiRequestDto,
-  UpdateInstansiPenilaiRequestDto,
-} from "../dto/instansi-penilai-request.dto";
-import { InstansiPenilaiService } from "../service/instansi-penilai.service";
+  CreatePembimbingLapanganRequestDto,
+  UpdatePembimbingLapanganRequestDto,
+} from "../dto/pembimbing-lapangan-request.dto";
+import { PembimbingLapanganService } from "../service/pembimbing-lapangan.service";
 
-type ParsedInstansiPenilaiId =
+type ParsedPembimbingId =
   | { success: true; id: number }
   | { success: false; error: string };
 
-export class InstansiPenilaiController {
-  private static parseInstansiPenilaiIdParam(
+export class PembimbingLapanganController {
+  private static parsePembimbingIdParam(
     idParam: string | undefined,
-  ): ParsedInstansiPenilaiId {
+  ): ParsedPembimbingId {
     if (!idParam) {
       return {
         success: false,
@@ -25,7 +25,7 @@ export class InstansiPenilaiController {
     if (isNaN(id)) {
       return {
         success: false,
-        error: "Invalid instansi penilai ID",
+        error: "Invalid pembimbing lapangan ID",
       };
     }
 
@@ -37,12 +37,12 @@ export class InstansiPenilaiController {
 
   static async getAll(c: Context) {
     try {
-      const instansiPenilais = await InstansiPenilaiService.getAllInstansiPenilais();
+      const pembimbings = await PembimbingLapanganService.getAllPembimbings();
 
       return c.json({
         success: true,
-        data: instansiPenilais,
-        message: "Instansi Penilais fetched successfully",
+        data: pembimbings,
+        message: "Pembimbing Lapangan fetched successfully",
       });
     } catch (error) {
       return c.json(
@@ -58,7 +58,7 @@ export class InstansiPenilaiController {
 
   static async getById(c: Context) {
     try {
-      const parsedId = InstansiPenilaiController.parseInstansiPenilaiIdParam(
+      const parsedId = PembimbingLapanganController.parsePembimbingIdParam(
         c.req.param("id"),
       );
 
@@ -66,16 +66,16 @@ export class InstansiPenilaiController {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const instansiPenilai = await InstansiPenilaiService.getInstansiPenilaiById(parsedId.id);
+      const pembimbing = await PembimbingLapanganService.getPembimbingById(parsedId.id);
 
-      if (!instansiPenilai) {
-        return c.json({ success: false, message: "Instansi Penilai not found" }, 404);
+      if (!pembimbing) {
+        return c.json({ success: false, message: "Pembimbing Lapangan not found" }, 404);
       }
 
       return c.json({
         success: true,
-        data: instansiPenilai,
-        message: "Instansi Penilai fetched successfully",
+        data: pembimbing,
+        message: "Pembimbing Lapangan fetched successfully",
       });
     } catch (error) {
       return c.json(
@@ -91,7 +91,7 @@ export class InstansiPenilaiController {
 
   static async create(c: Context) {
     try {
-      const body: CreateInstansiPenilaiRequestDto = await c.req.json();
+      const body: CreatePembimbingLapanganRequestDto = await c.req.json();
 
       if (
         !body.kkl_klp_id ||
@@ -109,15 +109,15 @@ export class InstansiPenilaiController {
         );
       }
 
-      const createResult = await InstansiPenilaiService.createInstansiPenilai(body);
+      const createResult = await PembimbingLapanganService.createPembimbing(body);
 
       if ("conflict" in createResult && createResult.conflict) {
         return c.json(
           {
             success: false,
             message: createResult.reason === "kkl_klp_id" 
-              ? "Kelompok KKL ini sudah memiliki akun Instansi Penilai"
-              : "Instansi Penilai virtual_account already exists",
+              ? "Kelompok KKL ini sudah memiliki akun Pembimbing Lapangan"
+              : "Pembimbing Lapangan virtual_account already exists",
           },
           400,
         );
@@ -127,7 +127,7 @@ export class InstansiPenilaiController {
         {
           success: true,
           data: createResult.result,
-          message: "Instansi Penilai created successfully",
+          message: "Pembimbing Lapangan created successfully",
         },
         201,
       );
@@ -145,7 +145,7 @@ export class InstansiPenilaiController {
 
   static async update(c: Context) {
     try {
-      const parsedId = InstansiPenilaiController.parseInstansiPenilaiIdParam(
+      const parsedId = PembimbingLapanganController.parsePembimbingIdParam(
         c.req.param("id"),
       );
 
@@ -153,21 +153,21 @@ export class InstansiPenilaiController {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const body: UpdateInstansiPenilaiRequestDto = await c.req.json();
-      const updateResult = await InstansiPenilaiService.updateInstansiPenilai(
+      const body: UpdatePembimbingLapanganRequestDto = await c.req.json();
+      const updateResult = await PembimbingLapanganService.updatePembimbing(
         parsedId.id,
         body,
       );
 
       if (!updateResult) {
-        return c.json({ success: false, message: "Instansi Penilai not found" }, 404);
+        return c.json({ success: false, message: "Pembimbing Lapangan not found" }, 404);
       }
 
       if ("conflict" in updateResult && updateResult.conflict) {
         return c.json(
           {
             success: false,
-            message: "Kelompok KKL ini sudah memiliki akun Instansi Penilai",
+            message: "Kelompok KKL ini sudah memiliki akun Pembimbing Lapangan",
           },
           400,
         );
@@ -176,7 +176,7 @@ export class InstansiPenilaiController {
       return c.json({
         success: true,
         data: updateResult.result,
-        message: "Instansi Penilai updated successfully",
+        message: "Pembimbing Lapangan updated successfully",
       });
     } catch (error) {
       return c.json(
@@ -192,7 +192,7 @@ export class InstansiPenilaiController {
 
   static async delete(c: Context) {
     try {
-      const parsedId = InstansiPenilaiController.parseInstansiPenilaiIdParam(
+      const parsedId = PembimbingLapanganController.parsePembimbingIdParam(
         c.req.param("id"),
       );
 
@@ -200,18 +200,18 @@ export class InstansiPenilaiController {
         return c.json({ success: false, message: parsedId.error }, 400);
       }
 
-      const deleteResult = await InstansiPenilaiService.deleteInstansiPenilai(
+      const deleteResult = await PembimbingLapanganService.deletePembimbing(
         parsedId.id,
       );
 
       if (!deleteResult) {
-        return c.json({ success: false, message: "Instansi Penilai not found" }, 404);
+        return c.json({ success: false, message: "Pembimbing Lapangan not found" }, 404);
       }
 
       return c.json({
         success: true,
         data: deleteResult.result,
-        message: "Instansi Penilai deleted successfully",
+        message: "Pembimbing Lapangan deleted successfully",
       });
     } catch (error) {
       return c.json(

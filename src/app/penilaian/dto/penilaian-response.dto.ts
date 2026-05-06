@@ -1,7 +1,7 @@
 export type PenilaianResponseDto = {
   id: number;
   kkl_agt_id: number;
-  instansi_penilai_id: number;
+  pembimbing_id: number;
   lama_praktek: number;
   kehadiran: number;
   disiplin: number;

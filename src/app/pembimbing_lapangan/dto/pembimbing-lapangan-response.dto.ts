@@ -1,4 +1,4 @@
-export type InstansiPenilaiResponseDto = {
+export type PembimbingLapanganResponseDto = {
   id: number;
   kkl_klp_id: number;
   virtual_account: string;

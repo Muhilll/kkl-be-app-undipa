@@ -19,7 +19,7 @@ const createLaporanRequestSchema = z
   .object({
     kkl_agt_id: z.coerce.number().int().openapi({ example: 1 }),
     tanggal: z.string().openapi({ example: "2026-05-01" }),
-    jam: z.string().openapi({ example: "08:00:00" }),
+    jam: z.string().openapi({ example: "08:00-16:00" }),
     aktifitas: z.string().openapi({ example: "Kegiatan observasi lapangan" }),
     file: z.string().nullable().optional().openapi({ example: null }),
     latitude: z.string().nullable().optional().openapi({ example: "-5.14766500" }),
@@ -33,7 +33,7 @@ const updateLaporanRequestSchema = z
   .object({
     kkl_agt_id: createOptionalCoercedIntSchema(1),
     tanggal: z.string().optional().openapi({ example: "2026-05-01" }),
-    jam: z.string().optional().openapi({ example: "08:00:00" }),
+    jam: z.string().optional().openapi({ example: "08:00-16:00" }),
     aktifitas: z.string().optional().openapi({ example: "Kegiatan observasi lapangan" }),
     file: z.string().nullable().optional().openapi({ example: null }),
     latitude: z.string().nullable().optional().openapi({ example: "-5.14766500" }),

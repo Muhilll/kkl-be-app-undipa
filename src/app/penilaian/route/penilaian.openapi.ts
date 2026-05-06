@@ -18,7 +18,7 @@ const penilaianIdParamsSchema = createNumericPathParamsSchema("id");
 const createPenilaianRequestSchema = z
   .object({
     kkl_agt_id: z.coerce.number().int().openapi({ example: 1 }),
-    instansi_penilai_id: z.coerce.number().int().openapi({ example: 1 }),
+    pembimbing_id: z.coerce.number().int().openapi({ example: 1 }),
     lama_praktek: z.coerce.number().int().openapi({ example: 85 }),
     kehadiran: z.coerce.number().int().openapi({ example: 90 }),
     disiplin: z.coerce.number().int().openapi({ example: 85 }),
@@ -40,7 +40,7 @@ const createPenilaianRequestSchema = z
 const updatePenilaianRequestSchema = z
   .object({
     kkl_agt_id: createOptionalCoercedIntSchema(1),
-    instansi_penilai_id: createOptionalCoercedIntSchema(1),
+    pembimbing_id: createOptionalCoercedIntSchema(1),
     lama_praktek: createOptionalCoercedIntSchema(85),
     kehadiran: createOptionalCoercedIntSchema(90),
     disiplin: createOptionalCoercedIntSchema(85),

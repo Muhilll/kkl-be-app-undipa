@@ -1,19 +1,25 @@
 import { eq } from "drizzle-orm";
 import { db } from "../../../db";
-import { instansi_penilais, users, roles } from "../../../db/schema";
+import { pembimbings, users, roles } from "../../../db/schema";
 import {
-  CreateInstansiPenilaiRequestDto,
-  UpdateInstansiPenilaiRequestDto,
-} from "../dto/instansi-penilai-request.dto";
+  CreatePembimbingLapanganRequestDto,
+  UpdatePembimbingLapanganRequestDto,
+} from "../dto/pembimbing-lapangan-request.dto";
 
-export class InstansiPenilaiWriteRepository {
-  static async createInstansiPenilai(data: CreateInstansiPenilaiRequestDto) {
+export class PembimbingLapanganWriteRepository {
+  static async createPembimbing(data: CreatePembimbingLapanganRequestDto) {
     try {
       return await db.transaction(async (tx) => {
-        // Find INSTANSI_PENILAI role, fallback to USER
+        // Find PEMBIMBING_LAPANGAN role, fallback to USER
         let role = await tx.query.roles.findFirst({
-          where: eq(roles.code, "INSTANSI_PENILAI"),
+          where: eq(roles.code, "PEMBIMBING_LAPANGAN"),
         });
+
+        if (!role) {
+          role = await tx.query.roles.findFirst({
+            where: eq(roles.code, "INSTANSI_PENILAI"),
+          });
+        }
 
         if (!role) {
           role = await tx.query.roles.findFirst({
@@ -35,8 +41,8 @@ export class InstansiPenilaiWriteRepository {
 
         const newUserId = userResult.insertId;
 
-        // 2. Insert into instansi_penilais table
-        const result = await tx.insert(instansi_penilais).values({
+        // 2. Insert into pembimbings table
+        const result = await tx.insert(pembimbings).values({
           kkl_klp_id: data.kkl_klp_id,
           virtual_account: data.virtual_account,
           password: data.password,
@@ -48,18 +54,18 @@ export class InstansiPenilaiWriteRepository {
         return result;
       });
     } catch (error) {
-      throw new Error(`Failed to create instansi penilai: ${error}`);
+      throw new Error(`Failed to create pembimbing lapangan: ${error}`);
     }
   }
 
-  static async updateInstansiPenilai(id: number, data: UpdateInstansiPenilaiRequestDto) {
+  static async updatePembimbing(id: number, data: UpdatePembimbingLapanganRequestDto) {
     try {
       return await db.transaction(async (tx) => {
-        const instansiPenilai = await tx.query.instansi_penilais.findFirst({
-          where: eq(instansi_penilais.id, id)
+        const pembimbing = await tx.query.pembimbings.findFirst({
+          where: eq(pembimbings.id, id)
         });
 
-        if (!instansiPenilai) throw new Error("Instansi Penilai not found");
+        if (!pembimbing) throw new Error("Pembimbing Lapangan not found");
 
         if (data.virtual_account || data.password) {
           const userUpdateData: any = {};
@@ -69,40 +75,40 @@ export class InstansiPenilaiWriteRepository {
           await tx
             .update(users)
             .set({ ...userUpdateData, updated_at: new Date() })
-            .where(eq(users.id, instansiPenilai.user_id));
+            .where(eq(users.id, pembimbing.user_id));
         }
 
         return await tx
-          .update(instansi_penilais)
+          .update(pembimbings)
           .set({
             ...data,
             updated_at: new Date(),
           })
-          .where(eq(instansi_penilais.id, id));
+          .where(eq(pembimbings.id, id));
       });
     } catch (error) {
-      throw new Error(`Failed to update instansi penilai: ${error}`);
+      throw new Error(`Failed to update pembimbing lapangan: ${error}`);
     }
   }
 
-  static async deleteInstansiPenilai(id: number) {
+  static async deletePembimbing(id: number) {
     try {
       return await db.transaction(async (tx) => {
-        const instansiPenilai = await tx.query.instansi_penilais.findFirst({
-          where: eq(instansi_penilais.id, id)
+        const pembimbing = await tx.query.pembimbings.findFirst({
+          where: eq(pembimbings.id, id)
         });
 
-        if (!instansiPenilai) throw new Error("Instansi Penilai not found");
+        if (!pembimbing) throw new Error("Pembimbing Lapangan not found");
 
-        const result = await tx.delete(instansi_penilais).where(eq(instansi_penilais.id, id));
+        const result = await tx.delete(pembimbings).where(eq(pembimbings.id, id));
         
         // Also delete the user
-        await tx.delete(users).where(eq(users.id, instansiPenilai.user_id));
+        await tx.delete(users).where(eq(users.id, pembimbing.user_id));
 
         return result;
       });
     } catch (error) {
-      throw new Error(`Failed to delete instansi penilai: ${error}`);
+      throw new Error(`Failed to delete pembimbing lapangan: ${error}`);
     }
   }
 }

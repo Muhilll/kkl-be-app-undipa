@@ -233,7 +233,7 @@ export const laporans = mysqlTable(
     id: int().primaryKey().autoincrement(),
     kkl_agt_id: int().notNull(),
     tanggal: date().notNull(),
-    jam: time().notNull(),
+    jam: varchar({ length: 50 }).notNull(),
     aktifitas: text().notNull(),
     file: varchar({ length: 255 }),
     latitude: decimal({ precision: 10, scale: 8 }),
@@ -251,9 +251,9 @@ export const laporans = mysqlTable(
   })
 );
 
-// Instansi Penilais Table
-export const instansi_penilais = mysqlTable(
-  "instansi_penilais",
+// Pembimbings Table (Pembimbing Lapangan)
+export const pembimbings = mysqlTable(
+  "pembimbings",
   {
     id: int().primaryKey().autoincrement(),
     kkl_klp_id: int().notNull(),
@@ -283,7 +283,7 @@ export const penilaians = mysqlTable(
   {
     id: int().primaryKey().autoincrement(),
     kkl_agt_id: int().notNull(),
-    instansi_penilai_id: int().notNull(),
+    pembimbing_id: int().notNull(),
     lama_praktek: int().notNull(),
     kehadiran: int().notNull(),
     disiplin: int().notNull(),
@@ -307,9 +307,9 @@ export const penilaians = mysqlTable(
       columns: [table.kkl_agt_id],
       foreignColumns: [kkl_agts.id],
     }),
-    instansi_penilai_fk: foreignKey({
-      columns: [table.instansi_penilai_id],
-      foreignColumns: [instansi_penilais.id],
+    pembimbing_fk: foreignKey({
+      columns: [table.pembimbing_id],
+      foreignColumns: [pembimbings.id],
     }),
   })
 );

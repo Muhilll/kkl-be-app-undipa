@@ -5,7 +5,7 @@ import { penilaians } from "../../../db/schema";
 const penilaianSelect = {
   id: penilaians.id,
   kkl_agt_id: penilaians.kkl_agt_id,
-  instansi_penilai_id: penilaians.instansi_penilai_id,
+  pembimbing_id: penilaians.pembimbing_id,
   lama_praktek: penilaians.lama_praktek,
   kehadiran: penilaians.kehadiran,
   disiplin: penilaians.disiplin,

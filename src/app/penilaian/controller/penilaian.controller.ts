@@ -96,7 +96,7 @@ export class PenilaianController {
       // Basic validation for all required fields
       if (
         body.kkl_agt_id === undefined ||
-        body.instansi_penilai_id === undefined ||
+        body.pembimbing_id === undefined ||
         body.total === undefined ||
         !body.ratarata
       ) {
