@@ -1,6 +1,6 @@
 import { eq, desc, and } from "drizzle-orm";
 import { db } from "../../../db";
-import { laporans, kkl_agts, mahasiswas } from "../../../db/schema";
+import { laporans, kkl_agts, mahasiswas, kkl_klps, kkl_periodes } from "../../../db/schema";
 
 function selectLaporanFields() {
   return {
@@ -72,14 +72,13 @@ export class LaporanReadRepository {
     }
   }
 
-  static async getLaporansByMahasiswaId(mahasiswaId: number, limitCount: number = 5) {
+  static async getLaporansByMahasiswaId(mahasiswaId: number) {
     try {
       const rows = await laporanJoins(
         db.select(selectLaporanFields()).from(laporans)
       )
       .where(eq(kkl_agts.mahasiswa_id, mahasiswaId))
-      .orderBy(desc(laporans.tanggal), desc(laporans.created_at))
-      .limit(limitCount);
+      .orderBy(desc(laporans.tanggal), desc(laporans.created_at));
 
       return rows.map(mapLaporanRow);
     } catch (error) {
@@ -103,6 +102,28 @@ export class LaporanReadRepository {
       return rows.length > 0;
     } catch (error) {
       throw new Error(`Failed to check today laporan by mahasiswa: ${error}`);
+    }
+  }
+
+  static async checkKklAgtIsActive(kklAgtId: number): Promise<boolean> {
+    try {
+      const rows = await db
+        .select({
+          is_active: kkl_periodes.is_active,
+        })
+        .from(kkl_agts)
+        .leftJoin(kkl_klps, eq(kkl_agts.kkl_klp_id, kkl_klps.id))
+        .leftJoin(kkl_periodes, eq(kkl_klps.kkl_periode_id, kkl_periodes.id))
+        .where(eq(kkl_agts.id, kklAgtId))
+        .limit(1);
+
+      if (rows.length === 0) {
+        return false;
+      }
+
+      return rows[0].is_active ?? false;
+    } catch (error) {
+      throw new Error(`Failed to check kkl_agt active status: ${error}`);
     }
   }
 }

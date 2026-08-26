@@ -153,6 +153,16 @@ export class LaporanController {
 
       const createResult = await LaporanService.createLaporan(body);
 
+      if ('error' in createResult) {
+        return c.json(
+          {
+            success: false,
+            message: createResult.error,
+          },
+          400,
+        );
+      }
+
       return c.json(
         {
           success: true,

@@ -24,6 +24,10 @@ export class LaporanService {
   }
 
   static async createLaporan(payload: CreateLaporanRequestDto) {
+    const isActive = await LaporanReadRepository.checkKklAgtIsActive(payload.kkl_agt_id);
+    if (!isActive) {
+      return { error: "Laporan ditolak. Periode KKL sudah berakhir." };
+    }
     const result = await LaporanWriteRepository.createLaporan(payload);
     return { result };
   }
