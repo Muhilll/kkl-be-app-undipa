@@ -1,6 +1,6 @@
 import { eq, desc, and } from "drizzle-orm";
 import { db } from "../../../db";
-import { laporans, kkl_agts, mahasiswas, kkl_klps, kkl_periodes } from "../../../db/schema";
+import { laporans, kkl_agts, mahasiswas, kkl_klps, kkl_periodes, instansis } from "../../../db/schema";
 
 function selectLaporanFields() {
   return {
@@ -124,6 +124,28 @@ export class LaporanReadRepository {
       return rows[0].is_active ?? false;
     } catch (error) {
       throw new Error(`Failed to check kkl_agt active status: ${error}`);
+    }
+  }
+
+  static async getInstansiLocationByAgtId(kklAgtId: number) {
+    try {
+      const rows = await db
+        .select({
+          latitude: instansis.latitude,
+          longitude: instansis.longitude,
+        })
+        .from(kkl_agts)
+        .innerJoin(kkl_klps, eq(kkl_agts.kkl_klp_id, kkl_klps.id))
+        .innerJoin(instansis, eq(kkl_klps.instansi_id, instansis.id))
+        .where(eq(kkl_agts.id, kklAgtId))
+        .limit(1);
+
+      if (rows.length === 0) {
+        return null;
+      }
+      return rows[0];
+    } catch (error) {
+      throw new Error(`Failed to get instansi location: ${error}`);
     }
   }
 }
