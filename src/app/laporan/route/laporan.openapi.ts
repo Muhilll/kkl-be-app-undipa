@@ -26,7 +26,7 @@ const createLaporanRequestSchema = z
     latitude: z.string().nullable().optional().openapi({ example: "-5.14766500" }),
     longitude: z.string().nullable().optional().openapi({ example: "119.43273200" }),
     jarak: z.string().nullable().optional().openapi({ example: "0.50" }),
-    status: z.enum(["valid", "invalid"]).openapi({ example: "valid" }),
+    status: z.enum(["valid", "invalid"]).optional().nullable().openapi({ example: "valid" }),
   })
   .openapi("CreateLaporanRequest");
 

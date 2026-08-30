@@ -8,7 +8,7 @@ export type CreateLaporanRequestDto = {
   latitude?: string | null;
   longitude?: string | null;
   jarak?: string | null;
-  status: "valid" | "invalid";
+  status?: "valid" | "invalid" | null;
 };
 
 export type UpdateLaporanRequestDto = Partial<{

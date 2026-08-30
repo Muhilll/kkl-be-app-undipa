@@ -141,11 +141,11 @@ export class LaporanController {
     try {
       const body: CreateLaporanRequestDto = await c.req.json();
 
-      if (!body.kkl_agt_id || !body.tanggal || !body.jam || !body.aktifitas || !body.status) {
+      if (!body.kkl_agt_id || !body.tanggal || !body.jam || !body.aktifitas) {
         return c.json(
           {
             success: false,
-            message: "kkl_agt_id, tanggal, jam, aktifitas, and status are required",
+            message: "kkl_agt_id, tanggal, jam, and aktifitas are required",
           },
           400,
         );
