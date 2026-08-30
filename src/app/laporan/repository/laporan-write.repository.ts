@@ -12,6 +12,7 @@ export class LaporanWriteRepository {
       const payload = {
         ...data,
         tanggal: new Date(data.tanggal),
+        status: data.status as "valid" | "invalid",
       };
       return await db.insert(laporans).values(payload);
     } catch (error) {
